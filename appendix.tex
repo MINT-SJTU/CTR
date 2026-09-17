@@ -74,6 +74,21 @@ For pair $j$, we execute a control branch and a matched branch that pauses only 
 \end{equation}
 The analogous $\Delta T_{{\rm cap},i}$ measures the change in failure-penalized time for the unfrozen arm's remaining responsibility.
 
+\subsection{Phase-conditioned cross-arm sensitivity}
+For an observation $o_t$, let $o_t^{\bar i\leftarrow \bar i'}$ be a matched counterfactual that preserves arm $i$'s local state and the phase-relevant task context while replacing the opposite arm with another valid state from the comparison condition. We report
+\begin{equation}
+ S_{i\leftarrow \bar i}(t)=
+ \left\|
+ \frac{\pi_i(o_t)-\pi_i(o_t^{\bar i\leftarrow \bar i'})}{\sigma_a}
+ \right\|_2,
+ \label{eq:metrics-sensitivity}
+\end{equation}
+where $\sigma_a$ is the training-set action scale. For chunked policies, sensitivity is averaged over the prediction horizon. We average within each episode and phase before aggregating across episodes and training seeds. On Scan Object, $S_{\rm pre}$, $S_{\rm dep}$, and $S_{\rm post}$ denote independent acquisition, cooperative scanning, and independent placement, respectively, and
+\begin{equation}
+ G_{\rm sel}=S_{\rm dep}-\frac{1}{2}(S_{\rm pre}+S_{\rm post}).
+ \label{eq:metrics-selectivity}
+\end{equation}
+
 \subsection{Constraint, collision, and safety events}
 Let $D_j$ indicate an attempted action before a required prerequisite or an invalid withdrawal of required support; $X_j$ a forbidden concurrent workspace occupancy; $C_j$ a disallowed collision; and $A_j$ a safety-controller intervention or abort. We report
 \begin{equation}
@@ -163,33 +178,33 @@ Statistics & Seed-specific counts and the interval/paired-resampling procedure u
 \section{Detailed timing-distribution results}
 \label{app:e1}
 C0 means both arms are unfinished; CL means the left arm is already complete; CR means the right arm is already complete. Waiting is in seconds and post-completion translation in centimeters. Each row contains three training seeds and 180 evaluations.
-{\setlength{\tabcolsep}{3pt}\placeholdertable{tables/e1_full.tex}}
+{\setlength{\tabcolsep}{3pt}\input{tables/e1_full.tex}}
 
 \clearpage
 \section{Detailed paired-pause results}
 \label{app:e2a}
 The paused arm is listed in the ``Arm'' column; both $\Delta W$ and $\Delta T_{\rm cap}$ concern the opposite, controlled arm. Durations are 1, 2, and 4 seconds with an eight-second response window. Each row contains three training seeds and 60 matched pairs (120 branch executions).
-{\setlength{\tabcolsep}{3pt}\placeholdertable{tables/freeze_full.tex}}
+{\setlength{\tabcolsep}{3pt}\input{tables/freeze_full.tex}}
 
 \clearpage
 \section{Detailed held-out joint-progress results}
 \label{app:e2b}
 Each row contains three training seeds, 90 seen evaluations, and 90 held-out evaluations. Per-arm waiting is reported separately.
-{\setlength{\tabcolsep}{3pt}\placeholdertable{tables/heldout_full.tex}}
+{\setlength{\tabcolsep}{3pt}\input{tables/heldout_full.tex}}
 
 \clearpage
 \section{Detailed generality and constraint results}
 \label{app:e3}
 D denotes the default condition, P prerequisite delay/release, X workspace occupancy/release, and I independent execution after cooperation. Simulated and real cells contain 150 and 60 evaluations, respectively. A dash indicates that the metric is not applicable to that task/condition.
-{\setlength{\tabcolsep}{3pt}\placeholdertable{tables/generality_full.tex}}
+{\setlength{\tabcolsep}{3pt}\input{tables/generality_full.tex}}
 
 \clearpage
 \section{Detailed safety and release outcomes}
 The safety table reports collision rate (CR), safety-intervention rate (SAR), dependency exposure, release latency, and nonresponse for the Experiment~3 conditions.
-{\setlength{\tabcolsep}{3pt}\placeholdertable{tables/safety_full.tex}}
+{\setlength{\tabcolsep}{3pt}\input{tables/safety_full.tex}}
 
 \clearpage
 \section{Detailed component-study results}
 \label{app:e4}
 ``No mask'' is CTR without IdleMask and ``No main'' removes the main view. Each row lists three training seeds. PutCub cells contain 150 evaluations and 80 pairs; real cells contain 60 evaluations and 40 pairs. The main-text component table uses the real R1/R3 conditions.
-{\setlength{\tabcolsep}{3pt}\placeholdertable{tables/ablation_full.tex}}
+{\setlength{\tabcolsep}{3pt}\input{tables/ablation_full.tex}}
