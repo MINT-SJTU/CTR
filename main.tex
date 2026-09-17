@@ -25,10 +25,8 @@
 
 \begin{abstract}
 A bimanual demonstration specifies both \emph{what} the robot should do and one particular schedule for \emph{when} each arm should act.
-Standard imitation learning does not distinguish task-required coordination from incidental scheduling choices, and may therefore learn to wait for the other arm or continue moving after its own work is done.
-We study this failure mode as \emph{demonstrator-induced scheduling bias}: dependence on another arm's progress that is irrelevant for the current task phase.
-We introduce Constraint-preserving Temporal Recombination (\method), a training-time data intervention that preserves recorded arm-local motion while pairing the same local behavior with multiple task-consistent relative schedules.
-Task segments are annotated as reschedulable or protected by ordering/coordination constraints.
+Standard imitation learning does not distinguish task-required coordination from incidental scheduling choices, and may therefore learn to wait for or track the other's progress even when that dependence is irrelevant for the current task phase. We call this failure mode \emph{demonstrator-induced scheduling bias}.
+We introduce Constraint-preserving Temporal Recombination (\method), a training-time data intervention that preserves recorded arm-local motions while recombining them across multiple task-consistent relative schedules, with task-required ordering and coordination constraints protected.
 For recorded real-robot data, \method{} addresses two practical issues: reconstructing temporally consistent observations by compositing segmented arm-and-object foregrounds, and avoiding supervision during synthetic waits with an arm- and timestep-specific IdleMask.
 Across Diffusion Policy, ACT, and $\pi_{0.5}$, we find that narrow demonstration schedules induce an almost one-for-one transfer of irrelevant other-arm delays: delaying one arm by 1\,s makes the irrelevant other-arm wait an extra $0.95$--$1.16$\,s, while \method{} reduces this to $0.21$\,s.
 \method{} also reduces the success gap between seen and held-out joint-progress combinations from $6.8$ to $2.4$ percentage points.
