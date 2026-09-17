@@ -25,13 +25,13 @@
 
 \begin{abstract}
 A bimanual demonstration specifies both \emph{what} the robot should do and one particular schedule for \emph{when} each arm should act.
-Standard imitation learning does not distinguish task-required coordination from incidental scheduling choices, and may therefore learn to wait for or track the other's progress even when that dependence is irrelevant for the current task phase. We call this failure mode \emph{demonstrator-induced scheduling bias}.
-We introduce Constraint-preserving Temporal Recombination (\method), a training-time data intervention that preserves recorded arm-local motions while recombining them across multiple task-consistent relative schedules, with task-required ordering and coordination constraints protected.
+Standard imitation learning does not distinguish task-required inter-subtask structure from incidental scheduling choices, and may therefore learn to wait for or track the other's progress even when that dependence is irrelevant for the current task phase. We call this failure mode \emph{demonstrator-induced scheduling bias}.
+We introduce Constraint-preserving Temporal Recombination (\method), a training-time data intervention that preserves recorded arm-local motions while recombining them across multiple task-consistent relative schedules, with task-required inter-subtask constraints protected.
 For recorded real-robot data, \method{} addresses two practical issues: reconstructing temporally consistent observations by compositing segmented arm-and-object foregrounds, and avoiding supervision during synthetic waits with an arm- and timestep-specific IdleMask.
 Across Diffusion Policy, ACT, and $\pi_{0.5}$, we find that narrow demonstration schedules induce an almost one-for-one transfer of irrelevant other-arm delays: delaying one arm by 1\,s makes the irrelevant other-arm wait an extra $0.95$--$1.16$\,s, while \method{} reduces this to $0.21$\,s.
 \method{} also reduces the success gap between seen and held-out joint-progress combinations from $6.8$ to $2.4$ percentage points.
-Crucially, \method{} reduces sensitivity to irrelevant other-arm delays while preserving task-required coordination: in controlled real-robot prerequisite and shared-workspace tests, \method{} lowers constraint violations and more than halves the time to resume once the task can proceed.
-Together, these results show that \method{} broadens the temporal contexts available during training, enabling bimanual policies to generalize across task-consistent schedules while preserving task-required coordination.
+Crucially, \method{} reduces sensitivity to irrelevant other-arm delays while preserving task-required inter-subtask relations: in controlled real-robot Prerequisite and Shared-Workspace Exclusion tests, \method{} lowers constraint violations and more than halves the time to resume once the task can proceed.
+Together, these results show that \method{} broadens the temporal contexts available during training, enabling bimanual policies to generalize across task-consistent schedules while preserving task-required inter-subtask structure.
 \end{abstract}
 
 \begingroup
@@ -40,21 +40,23 @@ Together, these results show that \method{} broadens the temporal contexts avail
 \begin{figure}[H]
 \centering
 \includegraphics[width=.96\linewidth]{teaser/current/ctr_teaser_v4.pdf}
-\caption{\method{} broadens admissible schedules while preserving local motion and task-required coordination, reducing demonstrator-induced scheduling bias.}
+\caption{\method{} broadens admissible schedules while preserving local motion and task-required inter-subtask relations, reducing demonstrator-induced scheduling bias.}
 \label{fig:teaser}
 \end{figure}
 \endgroup
 
 \section{Introduction}
-A demonstration is simultaneously a skill trace and an answer to a scheduling question. Suppose one arm picks an object and the other arm picks a second, independent object. If the demonstrator happens to execute the two motions sequentially, the trajectory contains a useful manipulation strategy together with an incidental temporal convention. The same ambiguity appears inside coordinated tasks: opening a drawer must precede insertion, but it need not precede grasping the object that will eventually be inserted. A single demonstration realizes one feasible schedule; it does not say which temporal relationships define the task.
+A demonstration is simultaneously a skill trace and an answer to a scheduling question. Suppose a bimanual task contains two arm-local subtasks, each picking a separate object. If the relation between those subtasks is \textbf{Independent}, their relative timing is unconstrained by the task: either may start first, they may overlap, or they may execute sequentially. A particular demonstration still realizes only one such schedule, mixing useful manipulation content with an incidental temporal convention. The same ambiguity appears when subtasks have required relations: opening a cabinet may be a \textbf{Prerequisite} for insertion, while grasping the object to be inserted can remain temporally unconstrained until that prerequisite becomes binding. A single demonstration realizes one feasible schedule; it does not by itself reveal which cross-subtask temporal relationships define the task.
 
 Modern visuomotor imitation policies, including Diffusion Policy (DP), Action Chunking with Transformers (ACT), and vision-language-action models, can fit expressive joint action distributions \citep{chi2023diffusion,zhao2023act,pi2025pi05}. But the demonstrations do not tell the policy whether a correlation between the two arms is required by the task or merely reflects the demonstrator's habit. When local progress is tightly correlated in training, the opposite arm becomes a reliable predictor of what to do next. The resulting policy may succeed under the nominal demonstration schedule while remaining brittle when one arm finishes early, pauses unexpectedly, or reaches a familiar local state alongside an unfamiliar other-arm state. We call this failure mode \emph{demonstrator-induced scheduling bias}.
 
-The goal is not to make the arms independent, but to ignore incidental schedule correlations while preserving dependencies required by the task. During independent preparation, delaying one arm should not cause the other to wait. During insertion, support, alignment, or shared-workspace occupancy, the other arm's state may be exactly the information the policy must respond to.
+Throughout this paper, \textbf{Independent}, \textbf{Shared-Workspace Exclusion}, \textbf{Coordination}, and \textbf{Prerequisite} name relations between arm-local subtasks (or phases of those subtasks), not categories of whole tasks. Independent means that the task imposes no cross-subtask relative-timing constraint; Shared-Workspace Exclusion means that otherwise separable subtasks cannot simultaneously occupy a conflicting workspace or resource; Coordination means that a phase requires synchronized, relative-pose-, contact-, support-, or alignment-dependent behavior across subtasks; and Prerequisite means that progress in one subtask establishes a condition required before another subtask can proceed. A single bimanual task may contain more than one relation across phases; in our evaluation, each task is paired with the focal inter-subtask relation probed by the corresponding experiment.
+
+The goal is therefore not to force all subtasks to be Independent, but to ignore incidental schedule correlations while preserving task-required inter-subtask relations. When an Independent relation is active, delaying one subtask should not cause the other to wait. When a Prerequisite, Coordination, or Shared-Workspace Exclusion relation is binding, the other arm's state may be exactly the information the policy must respond to.
 
 We address this question with \method{} (Figure~\ref{fig:teaser}). \method{} keeps the recorded local sensorimotor content of each arm fixed while varying only its admissible timing relative to the other arm. We use GPT-6 Astra to construct task-level temporal annotations and generate task-specific video-annotation programs. On recorded real-robot data, we reconstruct the corresponding main-view observations from recognized and segmented arm/object foregrounds, and use IdleMask so that artificially inserted waits are not learned as expert actions. The policy architecture and inference procedure are unchanged; no task graph or scheduler is queried at deployment.
 
-Our contribution is organized around the failure mode rather than benchmark success alone. First, we formulate schedule dependence as a behavioral invariance problem and make explicit what is and is not identifiable from demonstrations. Second, we introduce \method{} as a constraint-preserving intervention on the training timing distribution, including a real-robot data realization and a principled treatment of synthetic waiting labels. Third, we establish a controlled behavioral evaluation protocol for schedule inheritance, robustness, selective coordination, and joint-progress generalization across DP, ACT, and $\pi_{0.5}$.
+Our contribution is organized around the failure mode rather than benchmark success alone. First, we formulate schedule dependence as a behavioral invariance problem and make explicit what is and is not identifiable about task-required inter-subtask relations from demonstrations. Second, we introduce \method{} as a constraint-preserving intervention on the training timing distribution, including a real-robot data realization and a principled treatment of synthetic waiting labels. Third, we establish a controlled behavioral evaluation protocol for schedule inheritance, robustness, relation-selective cross-arm dependence, and joint-progress generalization across DP, ACT, and $\pi_{0.5}$.
 
 \section{Related work}
 \paragraph{Causal confusion and counterfactual augmentation.}
@@ -66,9 +68,9 @@ MimicGen adapts object-centric demonstration segments to new contexts \citep{man
 \paragraph{Architectural separation and skill composition.}
 The Decoupled Interaction Framework separates arm policies while allowing selective interaction \citep{jiang2025dif}, and SkillVLA studies reuse across novel left--right skill pairings \citep{zhai2026skillvla}. These approaches change model structure or skill composition. \method{} changes the training distribution while retaining the chosen joint policy architecture, allowing the same failure mode and training-time intervention to be tested across DP, ACT, and $\pi_{0.5}$.
 
-\section{Problem formulation: task dependence versus schedule dependence}
+\section{Problem formulation: task-required inter-subtask relations versus schedule dependence}
 \subsection{A behavioral failure mode}
-Let a demonstration contain observations $o_t=(I_t^{\rm main},I_t^L,I_t^R,q_t^L,q_t^R)$ and actions $a_t=(a_t^L,a_t^R)$. Let $p_i$ denote arm $i$'s local semantic progress, $x_i$ its task-relevant local state, $c$ the shared conditions that determine whether cross-arm coordination is required, and $z_{\bar i}$ the remaining aspects of the opposite arm's progress.
+Let a demonstration contain observations $o_t=(I_t^{\rm main},I_t^L,I_t^R,q_t^L,q_t^R)$ and actions $a_t=(a_t^L,a_t^R)$. Let $p_i$ denote arm $i$'s local semantic progress, $x_i$ its task-relevant local state, $c$ the shared conditions that determine whether a task-required inter-subtask relation is currently binding, and $z_{\bar i}$ the remaining aspects of the opposite arm's progress.
 
 During a phase in which $z_{\bar i}$ is irrelevant, correct behavior should be approximately invariant to admissible changes in that other-arm context:
 \begin{equation}
@@ -77,20 +79,20 @@ During a phase in which $z_{\bar i}$ is irrelevant, correct behavior should be a
  \pi_i(\cdot\mid x_i,c,z'_{\bar i}).
  \label{eq:invariance}
 \end{equation}
-A policy exhibits scheduling bias when changing only the admissible progress of the other arm produces a systematic change in its own otherwise feasible behavior. This definition is deliberately phase-specific. If the other arm withholds a prerequisite, removes support, breaks alignment, or occupies a required workspace, then $c$ changes and invariance is no longer the desired behavior.
+A policy exhibits scheduling bias when changing only the admissible progress of the other arm produces a systematic change in its own otherwise feasible behavior. This definition is deliberately phase-specific. If the other arm withholds a Prerequisite, breaks a Coordination relation (for example by removing support or alignment), or violates a Shared-Workspace Exclusion condition, then $c$ changes and invariance is no longer the desired behavior.
 
 \subsection{What is and is not identifiable}
-If every observed demonstration satisfies $A\prec B$, the same data are compatible with two different explanations: $A$ may be a genuine prerequisite for $B$, or the demonstrator may simply prefer a serial scheduler. The left/right action partition identifies where a controlled pause can be applied, but it does not resolve this ambiguity. Objects, contacts, visibility, support, and shared geometry can create real dependencies between arms.
+If every observed demonstration satisfies $A\prec B$, the same data are compatible with two different explanations: there may be a genuine Prerequisite relation from $A$ to $B$, or the demonstrator may simply prefer a serial scheduler. The left/right action partition identifies where a controlled pause can be applied, but it does not resolve this ambiguity. Objects, contacts, visibility, support, and shared geometry can create real dependencies between arms.
 
-\method{} therefore does not attempt to discover the complete task constraint graph from demonstrations alone. Instead, \method{} uses training-time annotations of task temporal constraints. These annotations are supervision for data construction; they are not policy inputs and are not queried at deployment.
+\method{} therefore does not attempt to discover the complete inter-subtask relation graph from demonstrations alone. Instead, \method{} uses training-time annotations of task-required inter-subtask temporal relations. These annotations are supervision for data construction; they are not policy inputs and are not queried at deployment.
 
-The target is \emph{behavioral selectivity}: reduce sensitivity to progress of the other arm when the annotated task relation says that progress is irrelevant, while retaining sensitivity when the other arm changes a binding task condition. \method{} is a training-time data intervention in this sense: it alters the timing distribution used for learning, while claims concern observable policy behavior rather than recovery of a hidden neural causal graph.
+The target is \emph{behavioral selectivity}: reduce sensitivity to progress of the other arm when the annotated inter-subtask relation is Independent, while retaining sensitivity when the other arm changes a binding Prerequisite, Coordination, or Shared-Workspace Exclusion condition. \method{} is a training-time data intervention in this sense: it alters the timing distribution used for learning, while claims concern observable policy behavior rather than recovery of a hidden neural causal graph.
 
 \section{Constraint-Preserving Temporal Recombination}
 Figure~\ref{fig:method} summarizes the data-processing pipeline. Our goal is to isolate the effect of demonstration timing. Recollecting demonstrations under different schedules would also change the executed trajectories, introducing additional confounds. CTR instead preserves the recorded arm-local behavior and varies only admissible relative timing, making schedule the primary manipulated factor. The same property also makes CTR a practical data-augmentation method: it expands schedule coverage from existing demonstrations without requiring additional robot data collection.
 
 \subsection{Annotate rescheduling degrees of freedom}
-We decompose each recorded demonstration into ordered arm-local segments. GPT-6 Astra identifies the temporal dependency relations for the task, including which segment relations are reschedulable and which must be protected. Its generated video-annotation program then annotates the temporal segments in the recorded demonstrations. Intervals that may be shifted relative to the opposite arm are reschedulable, while within-arm ordering and task-required cross-arm relations are protected. The protected set includes prerequisites, sustained support, cooperative alignment, and shared-workspace exclusion. Coupled blocks move together; independent blocks may become serial, overlapping, or partially overlapping.
+We decompose each recorded demonstration into ordered arm-local segments. GPT-6 Astra identifies the inter-subtask temporal relations within the task, including which segment pairs are under an Independent relation and which are governed by task-required constraints. Its generated video-annotation program then annotates the temporal segments in the recorded demonstrations. Intervals paired under an Independent relation may be shifted relative to the opposite arm, while within-arm ordering and task-required cross-subtask relations are protected. The protected set includes Prerequisite relations, Coordination relations such as sustained support or alignment, and Shared-Workspace Exclusion relations. Coupled blocks move together; segment pairs under an Independent relation may become serial, overlapping, or partially overlapping.
 
 A schedule $s$ specifies segment start times, and $\Omega(\tau)$ denotes the admissible schedules for demonstration $\tau$. The annotation layer defines $\Omega(\tau)$; the policy never sees these labels. This separation is central to the study: task knowledge is used to construct alternative supervision, then distilled into an ordinary joint imitation policy.
 
@@ -146,10 +148,17 @@ Here $\ell$ is the coordinatewise action, denoising, or velocity-prediction loss
 Our evaluation follows a five-step argument from identifying demonstrator-induced scheduling bias to testing whether \method{} removes it selectively and generalizes beyond the temporal contexts seen in training. \textbf{Q1:} Does changing the demonstration schedule change the execution schedule learned by the policy? \textbf{Q2:} Does narrow schedule coverage make cross-arm behavior brittle even when local skills are unchanged? \textbf{Q3:} Can \method{} recover robustness lost under narrow demonstration schedule coverage? \textbf{Q4:} Can \method{} learn phase-selective cross-arm dependence, remaining insensitive to irrelevant opposite-arm progress while preserving task-required coordination? \textbf{Q5:} Does \method{} generalize to unseen temporal contexts and cross-arm progress configurations? A final component study isolates the roles of temporal variation, IdleMask, and the reconstructed main view.
 
 \paragraph{Controlled timing distributions.}
-The mechanism study uses the same local segment content to construct five training distributions: \textbf{Original}, the recorded demonstrations as collected; \textbf{Sequential}, which reverses the relative execution order in Original (e.g., $L\!\rightarrow\!R$ becomes $R\!\rightarrow\!L$); \textbf{Concurrent}, which aligns the two arms to start at the same time; \textbf{Mixed}, which mixes sequential and concurrent schedules; and \textbf{\method}, which samples relative schedules throughout the admissible range from fully left-before-right to fully right-before-left. Intermediate \method{} samples include partially overlapping and approximately concurrent executions. Transformations are applied only to task segments annotated as reschedulable; protected prerequisites, cooperative interactions, support/alignment relations, and workspace constraints remain unchanged. Training data volume and update count are matched within each model.
+We define six controlled timing distributions using the same local segment content: \textbf{Original}, the recorded demonstrations as collected; \textbf{Reverse}, obtained by reversing the relative execution order in Original (e.g., $L\!\rightarrow\!R$ becomes $R\!\rightarrow\!L$); \textbf{Sequential}, which combines the Original and Reverse schedules; \textbf{Concurrent}, which aligns the two arms to start at the same time; \textbf{Mixed}, which combines Sequential and Concurrent schedules; and \textbf{\method}, which samples relative schedules throughout the admissible range from fully left-before-right to fully right-before-left. Intermediate \method{} samples include partially overlapping and approximately concurrent executions. Transformations are applied only to segment pairs annotated as Independent/reschedulable; protected Prerequisite, Coordination (including support/alignment), and Shared-Workspace Exclusion relations remain unchanged. Training data volume and update count are matched within each model.
 
 \paragraph{Tasks and models.}
-We evaluate four classes of bimanual tasks: independent tasks, prerequisite tasks, tightly coordinated tasks, and shared-workspace tasks. For each class, we use one simulated and one real-robot task from RoboTwin2, yielding four simulated and four real tasks. PutCub is used for the controlled timing, completion-state, paired-pause, and held-out-progress studies. Scan Object is additionally used for the phase-conditioned cross-arm sensitivity analysis because its execution naturally transitions from independent object acquisition to coordinated scanning and back to independent placement. We evaluate DP, ACT, and $\pi_{0.5}$ in the controlled timing, robustness, paired-pause, held-out-progress, and coordination studies, and DP/$\pi_{0.5}$ in the component study.
+The four labels in our evaluation denote \emph{inter-subtask relation types}, not whole-task categories. We select one RoboTwin task and one real-robot task to probe each focal relation: \textbf{Independent}---Pick Dual Bottles and Letter Sorting; \textbf{Shared-Workspace Exclusion}---Place Dual Shoes and Hardware Storage; \textbf{Coordination}---Scan Object and Screw Insertion; and \textbf{Prerequisite}---Put Object Cabinet in simulation and on the real robot. Figure~\ref{fig:task-overview} shows the eight tasks and their focal relations. A task may contain other relation types in other phases; the label identifies the inter-subtask relation targeted by the corresponding analysis or intervention. Pick Dual Bottles is used for the controlled timing, completion-state, paired-pause, and held-out-progress studies. Scan Object is additionally used for the phase-conditioned cross-arm sensitivity analysis because its execution transitions from an Independent acquisition phase to a Coordination scanning phase and back to an Independent placement phase. We evaluate DP, ACT, and $\pi_{0.5}$ in the controlled timing, robustness, paired-pause, held-out-progress, and relation-specific constraint studies, and DP/$\pi_{0.5}$ in the component study.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{task_overview/ctr_tasks.pdf}
+\caption{Overview of the eight evaluation tasks. Columns group tasks by the focal inter-subtask relation: Independent, Shared-Workspace Exclusion, Coordination, and Prerequisite. The top and bottom rows show simulated and real-robot tasks, respectively, with two representative frames per task. A task may involve additional relation types in other phases.}
+\label{fig:task-overview}
+\end{figure}
 
 \paragraph{Diagnostics.}
 For schedule inheritance, we measure the relative start time
@@ -159,7 +168,7 @@ For schedule inheritance, we measure the relative start time
 \end{equation}
 where positive values indicate left-first execution and negative values indicate right-first execution. We additionally report task success (SR), capped completion time $T_{\rm cap}$, unnecessary ready-state waiting $W_i$, and post-completion translation $M_i$.
 
-For unseen execution interventions, paired-pause effects $\Delta W_i$ measure additional waiting in the unfrozen arm when only the opposite arm is externally paused. For selective coordination, constraint tests report dependency violations (DVR), exclusion violations (XR), release latency, and nonresponse after a prerequisite or shared region becomes available.
+For unseen execution interventions, paired-pause effects $\Delta W_i$ measure additional waiting in the unfrozen arm when only the opposite arm is externally paused. For relation-selective behavior, constraint tests report dependency violations (DVR), exclusion violations (XR), release latency, and nonresponse after a Prerequisite or Shared-Workspace Exclusion condition is released.
 
 Finally, we introduce a model-agnostic phase-conditioned cross-arm sensitivity diagnostic. Given an observation $o_t$, let
 \begin{equation}
@@ -178,23 +187,23 @@ with the symmetric definition for $S_{R\leftarrow L}$. Here $\sigma_a$ denotes t
 
 \section{Diagnosing demonstrator-induced scheduling bias}
 \subsection{Q1: Demonstration schedules are inherited by learned policies}
-We first test whether incidental scheduling structure in the demonstrations appears directly in learned execution. PutCub contains two independent subtasks, so either arm may start first without changing the task. We compare \textbf{Original} with \textbf{Sequential}, which preserves local task content while reversing the relative execution order of the two arms. Both policies are evaluated from the same C0 initial condition. Because the local behaviors are unchanged, a systematic change in $\Delta_{\rm start}$ isolates sensitivity to demonstration timing itself. If the policy learned only task-required structure, reversing an incidental demonstration order should not systematically reverse its execution order. In contrast, demonstrator-induced scheduling bias predicts a corresponding reversal in the learned execution schedule.
+We first test whether incidental scheduling structure in the demonstrations appears directly in learned execution. Pick Dual Bottles contains two arm-local subtasks whose focal relation is Independent, so either arm may start first without changing task validity. We compare \textbf{Original} with \textbf{Reverse}, which preserves local task content while reversing the relative execution order of the two arms. Both policies are evaluated from the same C0 initial condition. Because the local behaviors are unchanged, a systematic change in $\Delta_{\rm start}$ isolates sensitivity to demonstration timing itself. If the policy learned only task-required structure, reversing an incidental demonstration order should not systematically reverse its execution order. In contrast, demonstrator-induced scheduling bias predicts a corresponding reversal in the learned execution schedule.
 
 % TODO(author): Insert the verified Delta_start result once exported from the final experiment logs.
 
 \subsection{Q2: Narrow schedule coverage makes familiar local skills brittle}
 Schedule inheritance would be relatively benign if it affected only a harmless preference for execution order. We therefore test whether narrow schedule coverage also degrades behavior when the same local skills occur alongside a different state of opposite-arm progress.
 
-PutCub is evaluated from three initial conditions: both subtasks unfinished (C0), left already complete (CL), and right already complete (CR). CL and CR preserve the unfinished arm's remaining local task while changing the progress of the opposite arm. Thus, the comparison from C0 to CL/CR measures whether a policy trained under a narrow joint schedule remains robust when familiar local behavior is paired with a different cross-arm context.
+Pick Dual Bottles is evaluated from three initial conditions: both subtasks unfinished (C0), left already complete (CL), and right already complete (CR). CL and CR preserve the unfinished arm's remaining local task while changing the progress of the opposite arm. Thus, the comparison from C0 to CL/CR measures whether a policy trained under a narrow joint schedule remains robust when familiar local behavior is paired with a different cross-arm context.
 
 \begin{table}[t]
-\caption{Completion-state stress test on PutCub under five training timing distributions. $W_{\rm unfinished}$ (s) measures unnecessary waiting of the arm that still has work to do; $M_{\rm complete}$ (cm) measures motion of the arm whose responsibility is already complete.}
+\caption{Completion-state stress test on Pick Dual Bottles under the reported controlled timing distributions. $W_{\rm unfinished}$ (s) measures unnecessary waiting of the arm that still has work to do; $M_{\rm complete}$ (cm) measures motion of the arm whose responsibility is already complete.}
 \label{tab:e1}
 \centering\small\setlength{\tabcolsep}{3pt}
 \input{tables/e1_main.tex}
 \end{table}
 
-All three single-schedule groups degrade when one arm is already finished. Averaged over models and CL/CR, success is 59.9\%, 61.2\%, and 60.7\% for Original, Sequential, and Concurrent, respectively. The failure therefore does not depend on one particular execution order: left-first, right-first, and simultaneous training schedules all become brittle when the other arm appears at an unfamiliar stage of progress.
+All three single-schedule groups degrade when one arm is already finished. Averaged over models and CL/CR, success is 59.9\%, 61.2\%, and 60.7\% for Original, Reverse, and Concurrent, respectively. The failure therefore does not depend on one particular execution order: left-first, right-first, and simultaneous training schedules all become brittle when the other arm appears at an unfamiliar stage of progress.
 
 This establishes the behavioral cost of narrow schedule coverage. Demonstrator-induced scheduling bias is not merely a preference over equivalent schedules; it makes otherwise familiar local skills conditional on the progress context in which they were demonstrated.
 
@@ -206,18 +215,18 @@ The relevant comparison is now across training distributions under the matched C
 The separation between Q2 and Q3 is therefore deliberate. Q2 measures the degradation induced by narrow schedule coverage; Q3 measures how much of that degradation can be recovered by broadening the admissible temporal contexts seen during training. The improvement from single-schedule training to Mixed shows that schedule diversity itself matters, while the additional gain from Mixed to \method{} indicates that broader coverage of admissible relative progress provides a stronger intervention than a small discrete collection of canonical schedules.
 
 \section{Q4: Learning selective cross-arm dependence}
-Reducing cross-arm sensitivity is useful only when the opposite arm is irrelevant. A policy that simply ignores the other arm would fail during prerequisites, cooperative manipulation, alignment, or shared-workspace interactions. We therefore test selectivity at two complementary levels: a phase-conditioned counterfactual sensitivity analysis and task-level interventions on binding coordination constraints.
+Reducing cross-arm sensitivity is useful only when the opposite subtask is irrelevant under an Independent relation. A policy that simply ignores the other arm would fail when a Prerequisite, Coordination, or Shared-Workspace Exclusion relation is active. We therefore test selectivity at two complementary levels: a phase-conditioned counterfactual sensitivity analysis and task-level interventions on binding inter-subtask constraints.
 
 \subsection{Phase-conditioned cross-arm sensitivity}
-We perform this analysis on the simulated Scan Object task, whose execution transitions through three temporal regimes: independent object acquisition, coordinated scanning, and independent placement. This provides a controlled test because the same policy and task contain both phases in which opposite-arm progress should be largely irrelevant and a phase in which it is directly task-binding.
+We perform this analysis on the simulated Scan Object task, which contains different inter-subtask relations across its execution: an Independent relation during object acquisition, a Coordination relation during scanning, and an Independent relation during placement. This provides a controlled test because the same policy and task contain both phases in which opposite-arm progress should be largely irrelevant and a phase in which it is directly task-binding.
 
 For each evaluated trajectory, we divide execution into
 \begin{equation}
  P_{\rm pre},\qquad P_{\rm dep},\qquad P_{\rm post},
 \end{equation}
-corresponding to independent preparation, cooperative scanning, and independent completion.
+corresponding to Independent preparation, Coordination during scanning, and Independent completion.
 
-During $P_{\rm pre}$ and $P_{\rm post}$, we construct matched counterfactual observations that preserve the evaluated arm's local state while substituting a valid alternative progress state of the opposite arm. Because the two local responsibilities are independent in these phases, a selective policy should change its action little under this intervention.
+During $P_{\rm pre}$ and $P_{\rm post}$, we construct matched counterfactual observations that preserve the evaluated arm's local state while substituting a valid alternative progress state of the opposite arm. Because the inter-subtask relation is Independent in these phases, a selective policy should change its action little under this intervention.
 
 During $P_{\rm dep}$, the counterfactual instead changes the opposite arm's coordination-relevant state while matching the evaluated arm as closely as possible. Since successful scanning depends on the relative configuration and behavior of both arms, the same policy should now respond strongly to the opposite-arm change.
 
@@ -231,13 +240,13 @@ averaged symmetrically over $L\leftarrow R$ and $R\leftarrow L$, and define the 
  \label{eq:selectivity_gap}
 \end{equation}
 
-The desired behavior is therefore not uniformly low cross-arm sensitivity, but a phase-selective low--high--low pattern: low sensitivity during independent preparation, high sensitivity during cooperative scanning, and low sensitivity again after the binding interaction ends. We compare Original and \method{} across all three policy families; Mixed may additionally be reported as an intermediate schedule-diversity reference.
+The desired behavior is therefore not uniformly low cross-arm sensitivity, but a relation-selective low--high--low pattern: low sensitivity during Independent preparation, high sensitivity while the Coordination relation is active, and low sensitivity again after the binding relation ends. We compare Original and \method{} across all three policy families; Mixed may additionally be reported as an intermediate schedule-diversity reference.
 
 % TODO(author): Insert Scan Object phase-conditioned sensitivity results.
 % Report episode-level S_pre, S_dep, S_post, and G_sel with seed-level uncertainty.
 
-\subsection{Task-level coordination remains intact}
-The counterfactual sensitivity experiment tests whether cross-arm dependence is behaviorally selective. We complement it with direct task interventions that test whether this selectivity produces correct coordination.
+\subsection{Task-required inter-subtask relations remain intact}
+The counterfactual sensitivity experiment tests whether cross-arm dependence is behaviorally selective. We complement it with direct task interventions that test whether this selectivity produces the correct response to task-required inter-subtask relations.
 
 \begin{table}[t]
 \caption{Default-condition success (\%) on four simulated and four real tasks. Each pair compares original demonstrations with \method{} using the same policy family.}
@@ -248,28 +257,28 @@ The counterfactual sensitivity experiment tests whether cross-arm dependence is 
 
 Across all 24 task--model comparisons in Table~\ref{tab:generality}, \method{} has higher reported success. The macro-average rises from 68.3\% to 85.4\% in simulation and from 62.7\% to 79.5\% on real hardware. More importantly, these gains do not come from indiscriminate parallelization.
 
-For prerequisite tasks, we delay and then release the binding condition; for shared-workspace tasks, we occupy and then release the conflict region. A correct policy should wait while the constraint is active and resume promptly once it disappears.
+For conditions probing a Prerequisite relation, we delay and then release the prerequisite; for conditions probing Shared-Workspace Exclusion, we occupy and then release the conflict region. A correct policy should respect the relation while it is binding and resume promptly once it is released.
 
 \begin{table}[t]
-\caption{Selective-coordination interventions, averaged over models within each task. Violation is DVR for prerequisite/alignment tasks and XR for shared-workspace tasks. Release measures latency after the prerequisite or workspace becomes available.}
+\caption{Relation-selective interventions, averaged over models within each task. Violation is DVR for Prerequisite/Coordination conditions and XR for Shared-Workspace Exclusion conditions. Release measures latency after the binding prerequisite, coordination condition, or workspace exclusion is released.}
 \label{tab:constraints}
 \centering\small\setlength{\tabcolsep}{5pt}
 \input{tables/constraints_main.tex}
 \end{table}
 
-On the real drawer task, prerequisite violations fall from 6.30\% to 1.75\% and release latency from 1.56\,s to 0.64\,s. On real shared-workspace sorting, exclusion violations fall from 4.99\% to 2.31\% and release latency from 1.57\,s to 0.69\,s. On screw--sleeve insertion, where execution moves from independent preparation to cooperative insertion and back to independent completion, the independent-after-cooperation condition improves from 57.3\% to 74.0\% success. Across the four real default tasks, collision rates decrease from 3.20\% to 1.50\% and safety-intervention rates from 3.89\% to 1.75\%.
+On the real-robot Put Object Cabinet task, prerequisite violations fall from 6.30\% to 1.75\% and release latency from 1.56\,s to 0.64\,s. On Hardware Storage, exclusion violations fall from 4.99\% to 2.31\% and release latency from 1.57\,s to 0.69\,s. On Screw Insertion, where execution moves from an Independent preparation phase to a Coordination insertion phase and back to Independent completion, the independent-after-coordination condition improves from 57.3\% to 74.0\% success. Across the four real default tasks, collision rates decrease from 3.20\% to 1.50\% and safety-intervention rates from 3.89\% to 1.75\%.
 
-Together, the phase-conditioned sensitivity analysis and the constraint interventions test the same property at two levels. The desired effect of \method{} is not cross-arm independence. It is phase-selective dependence: opposite-arm progress should have little effect when it is irrelevant, but should strongly influence behavior when it defines a binding task condition.
+Together, the phase-conditioned sensitivity analysis and the constraint interventions test the same property at two levels. The desired effect of \method{} is not to erase inter-subtask dependence. It is relation-selective dependence: opposite-arm progress should have little effect under an Independent relation, but should influence behavior when a Prerequisite, Coordination, or Shared-Workspace Exclusion relation is binding.
 
 \section{Q5: Generalization to unseen temporal contexts}
 The previous experiments evaluate behavior under controlled changes that remain close to the training task structure. We finally ask whether broader temporal coverage improves generalization when familiar local skills appear in cross-arm contexts that were not explicitly represented during training. We test two complementary forms of novelty: an execution-time intervention and a held-out joint-progress split.
 
 \subsection{Unseen execution intervention: pausing one arm}
-In independent PutCub phases, we compare a normal execution with a matched branch in which only one arm is forced to remain still for 1, 2, or 4 seconds. The other arm continues to receive observations and control normally. For the unfrozen arm $i$,
+In Pick Dual Bottles, whose focal inter-subtask relation is Independent, we compare a normal execution with a matched branch in which only one arm is forced to remain still for 1, 2, or 4 seconds. The other arm continues to receive observations and control normally. For the unfrozen arm $i$,
 \begin{equation}
  \Delta W_i(d)=\frac{1}{P}\sum_{j=1}^P\left(W_{ij}^{\operatorname{pause}(\bar i,d)}-W_{ij}^{\rm control}\right).
 \end{equation}
-The forced pause creates an execution context that was not part of the nominal demonstration schedule. Importantly, the local task of the unfrozen arm does not change. A policy that generalizes across admissible temporal contexts should therefore continue its own independent responsibility instead of inheriting the delay.
+The forced pause creates an execution context that was not part of the nominal demonstration schedule. Importantly, the local task of the unfrozen arm does not change. A policy that generalizes across admissible temporal contexts should therefore continue its own subtask instead of inheriting the delay.
 
 \begin{figure}[t]
 \centering
@@ -279,9 +288,9 @@ The forced pause creates an execution context that was not part of the nominal d
 \label{fig:freeze}
 \end{figure}
 
-Extra waiting grows with pause duration for narrow-schedule policies. At a four-second pause, macro-averaged extra waiting is 4.62\,s for Original, 4.38\,s for Sequential, 3.77\,s for Concurrent, and 2.15\,s for Mixed, but only 0.83\,s for \method{}---a 61.5\% reduction relative to Mixed. Joint success under the same pauses averages 68.9\% for Mixed and 78.4\% for \method{}, ruling out the trivial explanation that low $\Delta W$ results from a policy that simply stops acting.
+Extra waiting grows with pause duration for narrow-schedule policies. At a four-second pause, macro-averaged extra waiting is 4.62\,s for Original, 4.38\,s for Reverse, 3.77\,s for Concurrent, and 2.15\,s for Mixed, but only 0.83\,s for \method{}---a 61.5\% reduction relative to Mixed. Joint success under the same pauses averages 68.9\% for Mixed and 78.4\% for \method{}, ruling out the trivial explanation that low $\Delta W$ results from a policy that simply stops acting.
 
-The same diagnostic appears in the real-robot component cohort. Across block sorting and screw--sleeve insertion, DP and $\pi_{0.5}$ average 2.86\,s extra waiting for Fixed, 1.85\,s for Fixed+Mask, and 0.48\,s for \method{}. Thus, broader schedule coverage improves robustness to a temporally novel intervention even when the local behavior required from the unfrozen arm is familiar.
+The same diagnostic appears in the real-robot component cohort. Across Letter Sorting and Screw Insertion, DP and $\pi_{0.5}$ average 2.86\,s extra waiting for Fixed, 1.85\,s for Fixed+Mask, and 0.48\,s for \method{}. Thus, broader schedule coverage improves robustness to a temporally novel intervention even when the local behavior required from the unfrozen arm is familiar.
 
 \subsection{Unseen combinations of familiar local progress}
 The pause intervention introduces novelty online. We complement it with a training-support test that explicitly withholds selected combinations of left- and right-arm semantic progress. We train separate models after withholding designated regions of joint semantic progress. H1 contains $p_L\in[0.4,0.6]$ with $p_R\in[0,0.1]$; H2 mirrors this split; H3 is the supplied late-mid/early-mid holdout. Each arm's local progress states occur elsewhere in training, but the selected pairings do not.
@@ -298,10 +307,10 @@ Mixed reaches 69.9\% held-out success with a 6.8-point seen-to-held-out gap. \me
 The two Q5 tests capture different forms of temporal novelty. The paired-pause experiment perturbs execution online, whereas the held-out-progress experiment removes specific joint contexts from the training support. In both cases, the local behaviors themselves are familiar; what changes is their temporal relationship to the other arm. Their agreement therefore supports the broader claim that \method{} improves generalization across unseen but task-consistent temporal contexts.
 
 \section{What makes CTR work?}
-The component study separates temporal coverage from the two implementation components required for recorded real-robot data. We evaluate Fixed, Fixed+Mask, \method{} without IdleMask, full \method{}, \method{} without the main view, and a directly collected multi-schedule reference (Real-Multi). Table~\ref{tab:ablation} averages real R1/R3 conditions for DP and $\pi_{0.5}$.
+The component study separates temporal coverage from the two implementation components required for recorded real-robot data. We evaluate Fixed, Fixed+Mask, \method{} without IdleMask, full \method{}, \method{} without the main view, and a directly collected multi-schedule reference (Real-Multi). Table~\ref{tab:ablation} averages real Letter Sorting/Screw Insertion conditions for DP and $\pi_{0.5}$.
 
 \begin{table}[t]
-\caption{Real-robot component study on R1/R3 with DP and $\pi_{0.5}$. Labels is the reported number of valid supervised action elements in millions; $W$ is waiting (s), $M$ post-completion motion (cm), and $\Delta W$ paired extra waiting (s).}
+\caption{Real-robot component study on Letter Sorting and Screw Insertion with DP and $\pi_{0.5}$. Labels is the reported number of valid supervised action elements in millions; $W$ is waiting (s), $M$ post-completion motion (cm), and $\Delta W$ paired extra waiting (s).}
 \label{tab:ablation}
 \centering\small\setlength{\tabcolsep}{4pt}
 \input{tables/e4_main.tex}
@@ -320,7 +329,7 @@ Removing the main view lowers average success from 75.6\% to 71.5\% and raises e
 \method{} depends on correct training-time temporal annotations; annotation errors can create invalid recombinations. Main-view composition is also an approximation to a physically realized concurrent scene, which is why contact-sensitive and coupled segments remain protected rather than being independently recombined. Finally, the paired other-arm pauses, phase-conditioned sensitivity analysis, and held-out progress regions cover specific forms of other-arm dependence rather than every possible bimanual interaction. These limitations narrow the claim to demonstrator-induced scheduling bias under annotated task constraints, while leaving the intervention and diagnostics directly testable.
 
 \section{Conclusion}
-Imitation policies can inherit incidental scheduling conventions from bimanual demonstrations. \method{} reduces this bias by exposing the same local behaviors to diverse task-consistent schedules while preserving required coordination. Across schedule reversal, robustness recovery, phase-conditioned cross-arm sensitivity, unseen other-arm interventions, coordination tests, and held-out joint contexts, the results support the same goal: learned cross-arm dependence should reflect the task, not the demonstrator's schedule.
+Imitation policies can inherit incidental scheduling conventions from bimanual demonstrations. \method{} reduces this bias by exposing the same local behaviors to diverse task-consistent schedules while preserving task-required inter-subtask relations. Across schedule reversal, robustness recovery, phase-conditioned cross-arm sensitivity, unseen other-arm interventions, relation-specific constraint tests, and held-out joint contexts, the results support the same goal: learned cross-arm dependence should reflect the task's inter-subtask structure, not the demonstrator's schedule.
 \label{sec:mainend}
 
 \clearpage
@@ -328,10 +337,10 @@ Imitation policies can inherit incidental scheduling conventions from bimanual d
 The source package contains the condition-level aggregate exports, CSV conversions, scripts that regenerate the descriptive tables and paired-pause plots, and the LaTeX source. Appendix~\ref{app:metrics} gives the metric definitions and Appendix~\ref{app:implementation} specifies the \method{} data-construction pipeline. A complete experimental release should include GPT-6 Astra temporal-relation annotations, the generated video-annotation programs, and prompt/schema versions, as well as the RobotSeg and foreground-processing configuration, source-to-recombined trajectory links, schedule samples, masks, policy configurations, and episode-level evaluation logs.
 
 \section*{Ethics statement}
-Temporal recombination is applied only within task-annotated admissible regions; prerequisites, sustained support, shared-object interactions, and workspace exclusions remain protected. Real-robot deployment uses the same independent safety procedures as the baseline policies. Any release of recorded camera streams should respect consent, privacy, and applicable data-use permissions.
+Temporal recombination is applied only where the annotated inter-subtask relation permits rescheduling; Prerequisite, Coordination/support, shared-object, and Shared-Workspace Exclusion constraints remain protected. Real-robot deployment uses the same independent safety procedures as the baseline policies. Any release of recorded camera streams should respect consent, privacy, and applicable data-use permissions.
 
 \section*{AI use statement}
-GPT-6 Astra has two roles in the data-construction pipeline: identifying the temporal dependency relations for each task, including which are reschedulable and which must be protected, and generating the automatic video-annotation programs that label temporal segments in recorded demonstrations. Generative AI was also used to discuss hypotheses and experimental design, assist literature discovery and comparison, formalize the method, analyze aggregate results, and draft and edit the manuscript and LaTeX. The robot experiments and reported empirical outcomes are produced by the experimental pipeline rather than by the writing model.
+GPT-6 Astra has two roles in the data-construction pipeline: identifying inter-subtask temporal relations within each task, including which are Independent/reschedulable and which must be protected, and generating the automatic video-annotation programs that label temporal segments in recorded demonstrations. Generative AI was also used to discuss hypotheses and experimental design, assist literature discovery and comparison, formalize the method, analyze aggregate results, and draft and edit the manuscript and LaTeX. The robot experiments and reported empirical outcomes are produced by the experimental pipeline rather than by the writing model.
 
 \bibliographystyle{plainnat}
 \bibliography{references}

@@ -1,33 +1,32 @@
 \section{Task and evaluation inventory}
 \label{app:tasks}
-Table~\ref{tab:tasks} maps the task identifiers used throughout the paper to their dependency structure. PutCub is the separate two-subtask cabinet task used for the mechanism, paired-pause, and held-out joint-progress studies.
+Table~\ref{tab:tasks} maps each evaluation task to the focal relation between its arm-local subtasks. These labels describe inter-subtask relations, not whole-task categories. S1 (Pick Dual Bottles) provides the focal Independent relation used for the mechanism, paired-pause, and held-out joint-progress studies.
 
 \begin{table}[ht]
-\caption{Task mapping and protected temporal relationships. ``Independent'' refers to the indicated task phase; protected interactions remain unchanged during recombination.}
+\caption{Task mapping by focal inter-subtask relation. A task may contain multiple relation types across phases; the listed relation is the one probed by the corresponding evaluation.}
 \label{tab:tasks}
 \centering\small
 \begin{tabularx}{\linewidth}{llXX}
 \toprule
-ID & Domain & Task & Temporal structure used by CTR \\
+ID & Domain & Task & Focal inter-subtask relation \\
 \midrule
-PutCub & Sim. & Put Object in Cabinet; two independent subtasks & Preserve each local sequence; relative progress may vary across the two subtasks.\\
-S1 & Sim. & Each arm acquires a bottle & Separate objects and independent progress.\\
-R1 & Real & Each arm sorts its own blocks & Separate sorting subtasks and terminal holds.\\
-S2 & Sim. & Place an object in a drawer & Opening precedes insertion; independent object preparation may overlap.\\
-R2 & Real & Place a block in a drawer & Same prerequisite and holding structure.\\
-S3 & Sim. & Scan Object & Independent preparation followed by protected relative pose/alignment during scanning.\\
-R3 & Real & Insert a screw into a sleeve & Independent acquisition, protected cooperative insertion, independent completion.\\
-S4 & Sim. & Place two shoes in a shared receptacle & Independent preparation with protected shared-workspace exclusion.\\
-R4 & Real & Sort mixed workpieces into left/right boxes & Protected shared-space exclusion and affected-object state.\\
+S1 & Sim. & Pick Dual Bottles & Independent: no task-required relative-timing constraint between the two arm-local subtasks.\\
+R1 & Real & Letter Sorting & Independent: separate letter-sorting subtasks may progress under different admissible relative schedules.\\
+S4 & Sim. & Place Dual Shoes & Shared-Workspace Exclusion: preparation may proceed separately, but conflicting simultaneous workspace occupancy is prohibited.\\
+R4 & Real & Hardware Storage & Shared-Workspace Exclusion: access to the shared region is mutually constrained while other progress may remain independent.\\
+S3 & Sim. & Scan Object & Coordination: acquisition and placement include Independent phases, while scanning requires protected relative pose/alignment.\\
+R3 & Real & Screw Insertion & Coordination: acquisition may proceed independently, while insertion is a protected coordinated phase.\\
+S2 & Sim. & Put Object Cabinet & Prerequisite: one subtask must establish the required cabinet condition before the dependent placement stage can proceed.\\
+R2 & Real & Put Object Cabinet & Prerequisite: the same prerequisite and holding structure is enforced on the real robot.\\
 \bottomrule
 \end{tabularx}
 \end{table}
 
 \paragraph{Evaluation inventory.}
-All result cells use three training seeds. Experiment~1 contains three models, five training timing distributions, and three initial conditions, with 180 evaluations per cell. The paired-pause study contains three models, five timing distributions, two pause directions, and 1/2/4-second durations; each condition contains 60 matched pairs (120 branch executions). The held-out joint-progress study uses 90 seen and 90 held-out evaluations per cell. The eight-task generality study uses 150 evaluations per simulated cell and 60 per real-robot cell. The component study uses DP and $\pi_{0.5}$ on PutCub, R1, and R3, with its full condition-level results reported in Appendix~\ref{app:e4}.
+All result cells use three training seeds. Experiment~1 contains three models and three initial conditions, with 180 evaluations per reported timing-distribution cell. The paired-pause study contains three models, two pause directions, and 1/2/4-second durations for each reported timing distribution; each condition contains 60 matched pairs (120 branch executions). The held-out joint-progress study uses 90 seen and 90 held-out evaluations per cell. The eight-task generality study uses 150 evaluations per simulated cell and 60 per real-robot cell. The component study uses DP and $\pi_{0.5}$ on Pick Dual Bottles, R1 (Letter Sorting), and R3 (Screw Insertion), with its full condition-level results reported in Appendix~\ref{app:e4}.
 
 \paragraph{Training groups.}
-Mix-3 is a single training set containing equal contributions from left-first, right-first, and simultaneous-start schedules; it is not an ensemble. The local arm content and training/update budgets are matched within the controlled timing experiment. Completed-arm holding examples are retained whenever holding is part of the task semantics.
+Reverse uses the opposite serial order from Original. Sequential is a single training set combining Original and Reverse schedules. Mix-3 (Mixed) adds the concurrent/simultaneous-start schedule to Sequential, so it contains Original, Reverse, and Concurrent examples; it is not an ensemble. The local arm content and training/update budgets are matched within the controlled timing experiment. Completed-arm holding examples are retained whenever holding is part of the task semantics.
 
 \section{Metric definitions and aggregation}
 \label{app:metrics}
@@ -83,7 +82,7 @@ For an observation $o_t$, let $o_t^{\bar i\leftarrow \bar i'}$ be a matched coun
  \right\|_2,
  \label{eq:metrics-sensitivity}
 \end{equation}
-where $\sigma_a$ is the training-set action scale. For chunked policies, sensitivity is averaged over the prediction horizon. We average within each episode and phase before aggregating across episodes and training seeds. On Scan Object, $S_{\rm pre}$, $S_{\rm dep}$, and $S_{\rm post}$ denote independent acquisition, cooperative scanning, and independent placement, respectively, and
+where $\sigma_a$ is the training-set action scale. For chunked policies, sensitivity is averaged over the prediction horizon. We average within each episode and phase before aggregating across episodes and training seeds. On Scan Object, $S_{\rm pre}$, $S_{\rm dep}$, and $S_{\rm post}$ denote Independent acquisition, Coordination during scanning, and Independent placement, respectively, and
 \begin{equation}
  G_{\rm sel}=S_{\rm dep}-\frac{1}{2}(S_{\rm pre}+S_{\rm post}).
  \label{eq:metrics-selectivity}
@@ -120,9 +119,9 @@ Main-text macro-averages are unweighted means over the explicitly named task/mod
 \REQUIRE Recorded streams $\mathcal D$; task description; training budget
 \FOR{each selected recorded demonstration $\tau$}
 \STATE Segment the trajectory into ordered arm-local task intervals.
-\STATE Use GPT-6 Astra to identify the task's temporal dependency relations, marking each as reschedulable or protected.
+\STATE Use GPT-6 Astra to identify the task's inter-subtask temporal relations, marking Independent/reschedulable pairs and protected relations.
 \STATE Run the video-annotation program generated by GPT-6 Astra to label temporal segments in the recorded demonstration.
-\STATE Build $\Omega(\tau)$ by preserving within-arm order, prerequisites, cooperative/support blocks, alignment, and workspace exclusion.
+\STATE Build $\Omega(\tau)$ by preserving within-arm order and all protected Prerequisite, Coordination/support/alignment, and Shared-Workspace Exclusion relations.
 \STATE Sample an admissible relative schedule $s\in\Omega(\tau)$.
 \FOR{each selected output time $t$}
 \STATE Read each arm's wrist view, proprioception, and valid local action at source time $\phi_i^s(t)$.
@@ -137,12 +136,12 @@ Main-text macro-averages are unweighted means over the explicitly named task/mod
 \end{algorithm}
 
 \subsection{GPT-6 Astra roles}
-GPT-6 Astra has two roles in CTR. First, it identifies the temporal dependency relations for each task, including which relations are reschedulable and which must be protected. Protected relations are further represented as precedence, cooperative/synchronized execution, sustained support, alignment-sensitive interaction, or shared-workspace exclusion when needed by the task. Second, it generates an automatic video-annotation program that annotates the temporal segments in the recorded demonstrations. CTR uses these annotations only to construct admissible training schedules.
+GPT-6 Astra has two roles in CTR. First, it identifies inter-subtask temporal relations within each task, including which segment pairs are Independent/reschedulable and which are governed by protected task requirements. Protected relations are represented as Prerequisite/precedence, Coordination (including synchronized execution, sustained support, or alignment-sensitive interaction), or Shared-Workspace Exclusion when needed by the task. Second, it generates an automatic video-annotation program that annotates the temporal segments in the recorded demonstrations. CTR uses these annotations only to construct admissible training schedules.
 
-The practical effect is to separate two questions that are conflated in a raw demonstration: what local behavior should each arm execute, and which relative timings are actually constrained by the task. Within-arm order and local motion are always retained. Only cross-arm timing that is annotated as free is recombined.
+The practical effect is to separate two questions that are conflated in a raw demonstration: what local behavior should each arm execute, and which inter-subtask relations are actually required by the task. Within-arm order and local motion are always retained. Only cross-arm timing under an annotated Independent relation is recombined.
 
 \subsection{Admissible schedule construction}
-A schedule $s$ is rejected when it violates a protected relation. Relative timing inside a coupled block is unchanged. Outside protected blocks, segment starts may be shifted so that independent work appears in different relative-progress contexts, including serial, overlapping, and partially overlapping executions. Sampling is performed over admissible schedules rather than over a fixed catalog of three canonical orders.
+A schedule $s$ is rejected when it violates a protected relation. Relative timing inside a coupled block is unchanged. For segment pairs annotated with an Independent relation, starts may be shifted so that the same local work appears in different relative-progress contexts, including serial, overlapping, and partially overlapping executions. Sampling is performed over admissible schedules rather than over a fixed catalog of three canonical orders.
 
 \subsection{RobotSeg-based foreground extraction and main-view composition}
 For each real demonstration, the arm-local wrist streams remain aligned to their own source times. The main camera requires a new visual realization after temporal recombination. RobotSeg and related open-source recognition/segmentation tools identify the left arm, right arm, and task-relevant manipulated objects and extract foreground masks from recorded frames. CTR selects the foregrounds associated with $\phi_L^s(t)$ and $\phi_R^s(t)$ and composes them with the scene background according to Eq.~\ref{eq:compose}. The output is a near-realistic main-view video of the recombined dual-arm execution and is used only for schedules admitted by the protected task relations.
@@ -164,10 +163,10 @@ Component & Reproducibility fields \\
 Robot and observations & Arm/gripper hardware, cameras and placement, synchronization, proprioception, action coordinates, control frequency.\\
 Policy & Checkpoint/revision, DP/ACT/$\pi_{0.5}$ configuration, observation history, action chunk/prediction length, temporal aggregation, normalization.\\
 Optimization & Optimizer, learning-rate schedule, batch size, steps, trainable parameters, precision, seeds, checkpoint selection, compute.\\
-Temporal annotation & GPT-6 Astra version, prompt/schema, temporal-relation labels, generated video-annotation programs, produced annotations, any annotation review/correction procedure.\\
+Temporal annotation & GPT-6 Astra version, prompt/schema, inter-subtask relation labels, generated video-annotation programs, produced annotations, any annotation review/correction procedure.\\
 Training schedules & Source demonstration IDs, sampled schedules, original/recombined mixture, valid action counts by arm/stage.\\
 Visual composition & RobotSeg/tool versions, detection/object assignment, masks, background extraction, composition rules, quality-control procedure.\\
-Constraints & Stage boundaries, prerequisites, support intervals, alignment blocks, exclusion geometry, schedule-rejection rules.\\
+Relation constraints & Stage boundaries, Prerequisite relations, Coordination/support/alignment intervals, Shared-Workspace Exclusion geometry, schedule-rejection rules.\\
 Evaluation & Success predicates, time limits, waiting/motion thresholds, progress estimator, paired-pause matching, release events, safety rules.\\
 Statistics & Seed-specific counts and the interval/paired-resampling procedure used for final reporting.\\
 \bottomrule
@@ -195,7 +194,7 @@ Each row contains three training seeds, 90 seen evaluations, and 90 held-out eva
 \clearpage
 \section{Detailed generality and constraint results}
 \label{app:e3}
-D denotes the default condition, P prerequisite delay/release, X workspace occupancy/release, and I independent execution after cooperation. Simulated and real cells contain 150 and 60 evaluations, respectively. A dash indicates that the metric is not applicable to that task/condition.
+D denotes the default condition, P Prerequisite delay/release, X Shared-Workspace Exclusion occupancy/release, and I Independent execution after Coordination. Simulated and real cells contain 150 and 60 evaluations, respectively. A dash indicates that the metric is not applicable to that task/condition.
 {\setlength{\tabcolsep}{3pt}\input{tables/generality_full.tex}}
 
 \clearpage
@@ -206,5 +205,5 @@ The safety table reports collision rate (CR), safety-intervention rate (SAR), de
 \clearpage
 \section{Detailed component-study results}
 \label{app:e4}
-``No mask'' is CTR without IdleMask and ``No main'' removes the main view. Each row lists three training seeds. PutCub cells contain 150 evaluations and 80 pairs; real cells contain 60 evaluations and 40 pairs. The main-text component table uses the real R1/R3 conditions.
+``No mask'' is CTR without IdleMask and ``No main'' removes the main view. Each row lists three training seeds. Pick Dual Bottles cells contain 150 evaluations and 80 pairs; real cells contain 60 evaluations and 40 pairs. The main-text component table uses the real R1/R3 conditions (Letter Sorting and Screw Insertion).
 {\setlength{\tabcolsep}{3pt}\input{tables/ablation_full.tex}}

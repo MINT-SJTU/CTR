@@ -9,6 +9,6 @@ This repository now contains the current rewritten manuscript source used for th
 - updated appendix metric definitions for cross-arm sensitivity and the selectivity gap;
 - bibliography, ICLR 2027 style, and main-text result tables.
 
-The large binary figure assets from the previous Overleaf repository have not yet been copied through the GitHub connector. The manuscript still references their original paths so that an Overleaf/GitHub synchronization or a later binary-asset migration can restore them without changing the LaTeX source.
+The figure assets, complete appendix result tables, data, and build scripts previously present only in MINT-SJTU/CTR were imported from commit f8b1571fea1e03fcb35249a78efae33364f7c187. Existing files in this repository were retained, including the updated manuscript, relation terminology, and task overview figure. Generated LaTeX build files were not imported.
 
-The detailed appendix result tables and auxiliary data/scripts from the previous paper workspace are also not yet fully mirrored here. No placeholder experimental results have been fabricated; the new Scan Object sensitivity section intentionally contains a TODO until those measurements are run and verified.
+The task overview is available as a PDF and an editable, self-contained HTML source under `task_overview/`. The new Scan Object sensitivity section still contains a TODO until those measurements are run and verified; no missing experimental results have been fabricated.
