@@ -1,0 +1,54 @@
+{
+  "status": "AUTHOR_TO_COMPLETE_FROM_ACTUAL_LOGS",
+  "robot": {
+    "arm_model": null,
+    "gripper": null,
+    "control_frequency_hz": null
+  },
+  "observations": {
+    "cameras": null,
+    "image_resolution": null,
+    "synchronization": null,
+    "proprioception_fields": null
+  },
+  "training": {
+    "n_train_seeds_as_exported": 3,
+    "seed_ids": null,
+    "model_checkpoints": null,
+    "optimizer": null,
+    "learning_rate": null,
+    "batch_size": null,
+    "steps_by_task_model": null,
+    "chunk_length": null,
+    "execution_horizon": null,
+    "checkpoint_selection": null
+  },
+  "augmentation": {
+    "agent_model_and_version": null,
+    "prompts": null,
+    "schedule_grid": null,
+    "sampling_measure": null,
+    "constraints_by_task": null,
+    "support_annotations": null,
+    "exclusion_geometry": null,
+    "main_view_composition": null,
+    "idle_mask_routing": null,
+    "auxiliary_loss_treatment": null
+  },
+  "evaluation": {
+    "counts_scope": null,
+    "seed_success_counts": null,
+    "success_predicates": null,
+    "time_limits": null,
+    "idle_thresholds": null,
+    "postcompletion_window": null,
+    "pause_pairing": null,
+    "real_pause_direction_duration_phase": null,
+    "H3_exact_region": null,
+    "progress_definition": null,
+    "release_horizon": null,
+    "interval_confidence_level": null,
+    "interval_estimator": null,
+    "bootstrap_resampling_unit": null
+  }
+}

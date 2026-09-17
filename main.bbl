@@ -1,0 +1,102 @@
+\begin{thebibliography}{12}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Ameperosa et~al.(2025)Ameperosa, Collins, Jain, and
+  Garg]{ameperosa2025rocoda}
+Ezra Ameperosa, Jeremy~A. Collins, Mrinal Jain, and Animesh Garg.
+\newblock {RoCoDA}: Counterfactual data augmentation for data-efficient robot
+  learning from demonstrations.
+\newblock In \emph{IEEE International Conference on Robotics and Automation},
+  2025.
+\newblock URL \url{https://arxiv.org/abs/2411.16959}.
+
+\bibitem[Armengol~Urp{\'{i}} et~al.(2024)Armengol~Urp{\'{i}}, Bagatella,
+  Vlastelica, and Martius]{urpi2024caiac}
+N{\'u}ria Armengol~Urp{\'{i}}, Marco Bagatella, Marin Vlastelica, and Georg
+  Martius.
+\newblock Causal action influence aware counterfactual data augmentation.
+\newblock In \emph{Proceedings of the 41st International Conference on Machine
+  Learning}, 2024.
+\newblock URL \url{https://proceedings.mlr.press/v235/armengol-urpi-24a.html}.
+
+\bibitem[Chi et~al.(2023)Chi, Xu, Feng, Cousineau, Du, Burchfiel, Tedrake, and
+  Song]{chi2023diffusion}
+Cheng Chi, Zhenjia Xu, Siyuan Feng, Eric Cousineau, Yilun Du, Benjamin
+  Burchfiel, Russ Tedrake, and Shuran Song.
+\newblock Diffusion policy: Visuomotor policy learning via action diffusion.
+\newblock arXiv:2303.04137, 2023.
+\newblock URL \url{https://arxiv.org/abs/2303.04137}.
+
+\bibitem[de~Haan et~al.(2019)de~Haan, Jayaraman, and Levine]{dehaan2019causal}
+Pim de~Haan, Dinesh Jayaraman, and Sergey Levine.
+\newblock Causal confusion in imitation learning.
+\newblock In \emph{Advances in Neural Information Processing Systems}, 2019.
+\newblock URL \url{https://arxiv.org/abs/1905.11979}.
+
+\bibitem[Jiang et~al.(2025{\natexlab{a}})Jiang, Wu, He, Zeng, Wei, Zhang, and
+  Zheng]{jiang2025dif}
+Jian-Jian Jiang, Xiao-Ming Wu, Yi-Xiang He, Ling-An Zeng, Yi-Lin Wei, Dandan
+  Zhang, and Wei-Shi Zheng.
+\newblock Rethinking bimanual robotic manipulation: Learning with decoupled
+  interaction framework.
+\newblock arXiv:2503.09186, 2025{\natexlab{a}}.
+\newblock URL \url{https://arxiv.org/abs/2503.09186}.
+
+\bibitem[Jiang et~al.(2025{\natexlab{b}})Jiang, Xie, Lin, Xu, Wan, Mandlekar,
+  Fan, and Zhu]{jiang2025dexmimicgen}
+Zhenyu Jiang, Yuqi Xie, Kevin Lin, Zhenjia Xu, Weikang Wan, Ajay Mandlekar,
+  Linxi Fan, and Yuke Zhu.
+\newblock {DexMimicGen}: Automated data generation for bimanual dexterous
+  manipulation via imitation learning.
+\newblock In \emph{IEEE International Conference on Robotics and Automation},
+  2025{\natexlab{b}}.
+\newblock URL \url{https://arxiv.org/abs/2410.24185}.
+
+\bibitem[Mandlekar et~al.(2023)Mandlekar, Nasiriany, Wen, Akinola, Narang, Fan,
+  Zhu, and Fox]{mandlekar2023mimicgen}
+Ajay Mandlekar, Soroush Nasiriany, Bowen Wen, Iretiayo Akinola, Yashraj Narang,
+  Linxi Fan, Yuke Zhu, and Dieter Fox.
+\newblock {MimicGen}: A data generation system for scalable robot learning
+  using human demonstrations.
+\newblock In \emph{Conference on Robot Learning}, 2023.
+\newblock URL \url{https://arxiv.org/abs/2310.17596}.
+
+\bibitem[{Physical Intelligence} et~al.(2025)]{pi2025pi05}
+{Physical Intelligence} et~al.
+\newblock {\(\pi_{0.5}\)}: a vision-language-action model with open-world
+  generalization.
+\newblock arXiv:2504.16054, 2025.
+\newblock URL \url{https://arxiv.org/abs/2504.16054}.
+
+\bibitem[Pitis et~al.(2020)Pitis, Creager, and Garg]{pitis2020coda}
+Silviu Pitis, Elliot Creager, and Animesh Garg.
+\newblock Counterfactual data augmentation using locally factored dynamics.
+\newblock In \emph{Advances in Neural Information Processing Systems}, 2020.
+\newblock URL \url{https://arxiv.org/abs/2007.02863}.
+
+\bibitem[Zhai et~al.(2026)Zhai, Huang, Wu, Zhao, Yu, Ren, Hao, and
+  Soh]{zhai2026skillvla}
+Xuanran Zhai, Zekai Huang, Longyan Wu, Qianyou Zhao, Qiaojun Yu, Jieji Ren,
+  Ce~Hao, and Harold Soh.
+\newblock {SkillVLA}: Tackling combinatorial diversity in dual-arm manipulation
+  via skill reuse.
+\newblock arXiv:2603.03836, 2026.
+\newblock URL \url{https://arxiv.org/abs/2603.03836}.
+
+\bibitem[Zhao et~al.(2026)Zhao, Ba, and Zhi]{zhao2026triman}
+James Zhao, Mingyuan Ba, and Weiming Zhi.
+\newblock Tri-manual visuomotor imitation learning of robot policies.
+\newblock arXiv:2607.25731, 2026.
+\newblock URL \url{https://arxiv.org/abs/2607.25731}.
+
+\bibitem[Zhao et~al.(2023)Zhao, Kumar, Levine, and Finn]{zhao2023act}
+Tony~Z. Zhao, Vikash Kumar, Sergey Levine, and Chelsea Finn.
+\newblock Learning fine-grained bimanual manipulation with low-cost hardware.
+\newblock In \emph{Robotics: Science and Systems}, 2023.
+\newblock URL \url{https://arxiv.org/abs/2304.13705}.
+
+\end{thebibliography}

@@ -1,0 +1,195 @@
+\section{Task and evaluation inventory}
+\label{app:tasks}
+Table~\ref{tab:tasks} maps the task identifiers used throughout the paper to their dependency structure. PutCub is the separate two-subtask cabinet task used for the mechanism, paired-pause, and held-out joint-progress studies.
+
+\begin{table}[ht]
+\caption{Task mapping and protected temporal relationships. ``Independent'' refers to the indicated task phase; protected interactions remain unchanged during recombination.}
+\label{tab:tasks}
+\centering\small
+\begin{tabularx}{\linewidth}{llXX}
+\toprule
+ID & Domain & Task & Temporal structure used by CTR \\
+\midrule
+PutCub & Sim. & Put Object in Cabinet; two independent subtasks & Preserve each local sequence; relative progress may vary across the two subtasks.\\
+S1 & Sim. & Each arm acquires a bottle & Separate objects and independent progress.\\
+R1 & Real & Each arm sorts its own blocks & Separate sorting subtasks and terminal holds.\\
+S2 & Sim. & Place an object in a drawer & Opening precedes insertion; independent object preparation may overlap.\\
+R2 & Real & Place a block in a drawer & Same prerequisite and holding structure.\\
+S3 & Sim. & Scan Object & Independent preparation followed by protected relative pose/alignment during scanning.\\
+R3 & Real & Insert a screw into a sleeve & Independent acquisition, protected cooperative insertion, independent completion.\\
+S4 & Sim. & Place two shoes in a shared receptacle & Independent preparation with protected shared-workspace exclusion.\\
+R4 & Real & Sort mixed workpieces into left/right boxes & Protected shared-space exclusion and affected-object state.\\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\paragraph{Evaluation inventory.}
+All result cells use three training seeds. Experiment~1 contains three models, five training timing distributions, and three initial conditions, with 180 evaluations per cell. The paired-pause study contains three models, five timing distributions, two pause directions, and 1/2/4-second durations; each condition contains 60 matched pairs (120 branch executions). The held-out joint-progress study uses 90 seen and 90 held-out evaluations per cell. The eight-task generality study uses 150 evaluations per simulated cell and 60 per real-robot cell. The component study uses DP and $\pi_{0.5}$ on PutCub, R1, and R3, with its full condition-level results reported in Appendix~\ref{app:e4}.
+
+\paragraph{Training groups.}
+Mix-3 is a single training set containing equal contributions from left-first, right-first, and simultaneous-start schedules; it is not an ensemble. The local arm content and training/update budgets are matched within the controlled timing experiment. Completed-arm holding examples are retained whenever holding is part of the task semantics.
+
+\section{Metric definitions and aggregation}
+\label{app:metrics}
+
+\subsection{Success and failure-penalized completion time}
+For evaluation $j$, let $T_j$ be the task-specific time limit, $S_j\in\{0,1\}$ indicate task success, and $t_j^{\rm goal}$ be completion time when successful. We report
+\begin{equation}
+ \mathrm{SR}=100\frac{1}{N}\sum_{j=1}^{N} S_j,
+ \qquad
+ T_{\rm cap}=\frac{1}{N}\sum_{j=1}^{N}
+ \left[S_jt_j^{\rm goal}+(1-S_j)T_j\right].
+ \label{eq:metrics-success}
+\end{equation}
+Failures and safety aborts therefore remain in the time metric through the task limit.
+
+\subsection{Unnecessary waiting}
+Let $r_{ij}(t)=1$ when arm $i$ still has an unfinished responsibility and can make legitimate task progress: required prerequisites are satisfied and there is no required hold or true obstruction. Let $b_{ij}(t)=1$ when the arm remains below the motion/progress thresholds used by the evaluator. If $\mathcal J_{ij}$ is the set of maximal intervals satisfying $r_{ij}(t)b_{ij}(t)=1$ for longer than the idle threshold, then
+\begin{equation}
+ W_{ij}=\sum_{J\in\mathcal J_{ij}} |J|,
+ \qquad
+ W_i=\frac{1}{N}\sum_j W_{ij}.
+ \label{eq:metrics-wait}
+\end{equation}
+Necessary support or prerequisite waiting does not count as unnecessary waiting. When a total is reported, $W=W_L+W_R$.
+
+In Experiment~1, unfinished-arm waiting is $W_R$ in CL and $W_L$ in CR. The main-table summary averages these two values.
+
+\subsection{Post-completion motion}
+Let $c_{ij}$ be the end of all responsibilities of arm $i$, including any required support or retreat, and let $x_{ij,k}\in\R^3$ be its end-effector position. Over a post-completion observation window $\tau_{\rm post}$,
+\begin{equation}
+ M_{ij}=100\sum_{k:\,[t_k,t_{k+1}]\subset[c_{ij},c_{ij}+\tau_{\rm post}]}
+ \|x_{ij,k+1}-x_{ij,k}\|_2,
+ \label{eq:metrics-motion}
+\end{equation}
+where the factor 100 converts meters to centimeters. In CL/CR summaries, $M_L$ is used for CL and $M_R$ for CR.
+
+\subsection{Paired other-arm pause effects}
+For pair $j$, we execute a control branch and a matched branch that pauses only the opposite arm $\bar i$ for duration $d$. For the unfrozen arm $i$,
+\begin{equation}
+ \delta W_{ij}=W_{ij}^{\rm pause}-W_{ij}^{\rm control},
+ \qquad
+ \Delta W_i=\frac{1}{P}\sum_j\delta W_{ij}.
+ \label{eq:metrics-paired}
+\end{equation}
+The analogous $\Delta T_{{\rm cap},i}$ measures the change in failure-penalized time for the unfrozen arm's remaining responsibility.
+
+\subsection{Constraint, collision, and safety events}
+Let $D_j$ indicate an attempted action before a required prerequisite or an invalid withdrawal of required support; $X_j$ a forbidden concurrent workspace occupancy; $C_j$ a disallowed collision; and $A_j$ a safety-controller intervention or abort. We report
+\begin{equation}
+ (\mathrm{DVR},\mathrm{XR},\mathrm{CR},\mathrm{SAR})
+ =\frac{100}{N}\sum_j(D_j,X_j,C_j,A_j).
+ \label{eq:metrics-constraint}
+\end{equation}
+DVR and XR are task-specific metrics rather than a single pooled notion of violation.
+
+\subsection{Responding after a binding condition is released}
+For a valid release event $e$, let $t_e^{\rm ready}$ be the first time that a previously withheld prerequisite or occupied region becomes available, $t_e^{\rm act}$ the first appropriate task-progress action, and $H_e$ the response horizon. We use
+\begin{equation}
+ L_e=\min(t_e^{\rm act}-t_e^{\rm ready},H_e),\qquad
+ U_e=\ind[t_e^{\rm act}-t_e^{\rm ready}>H_e],
+ \label{eq:metrics-release}
+\end{equation}
+with $L_e=H_e$ and $U_e=1$ if no response occurs. Release latency and nonresponse complement the violation metric: a policy should both respect an active constraint and resume when the constraint disappears.
+
+\subsection{Aggregation}
+Main-text macro-averages are unweighted means over the explicitly named task/model/condition cells, computed before display rounding. Detailed tables retain the condition-level interval fields from the experiment export. We do not pool heterogeneous tasks into a raw-time average when their evaluation horizons differ.
+
+\section{CTR implementation details}
+\label{app:implementation}
+
+\begin{algorithm}[ht]
+\caption{CTR data-construction algorithm}
+\label{alg:ctr}
+\begin{algorithmic}[1]
+\REQUIRE Recorded streams $\mathcal D$; task description; training budget
+\FOR{each selected recorded demonstration $\tau$}
+\STATE Segment the trajectory into ordered arm-local task intervals.
+\STATE Use GPT-6 Astra to identify the task's temporal dependency relations, marking each as reschedulable or protected.
+\STATE Run the video-annotation program generated by GPT-6 Astra to label temporal segments in the recorded demonstration.
+\STATE Build $\Omega(\tau)$ by preserving within-arm order, prerequisites, cooperative/support blocks, alignment, and workspace exclusion.
+\STATE Sample an admissible relative schedule $s\in\Omega(\tau)$.
+\FOR{each selected output time $t$}
+\STATE Read each arm's wrist view, proprioception, and valid local action at source time $\phi_i^s(t)$.
+\STATE For real data, use RobotSeg-style recognition/segmentation to extract the selected arm/object foregrounds and compose the main view.
+\STATE Set IdleMask to zero only for waiting coordinates inserted by the sampled schedule.
+\STATE Retain supervision for valid motion, required support, and terminal holding.
+\ENDFOR
+\ENDFOR
+\STATE Train the chosen joint policy with the masked base imitation objective and matched update budget.
+\STATE Deploy on ordinary real observations; no temporal annotations or scheduler are queried online.
+\end{algorithmic}
+\end{algorithm}
+
+\subsection{GPT-6 Astra roles}
+GPT-6 Astra has two roles in CTR. First, it identifies the temporal dependency relations for each task, including which relations are reschedulable and which must be protected. Protected relations are further represented as precedence, cooperative/synchronized execution, sustained support, alignment-sensitive interaction, or shared-workspace exclusion when needed by the task. Second, it generates an automatic video-annotation program that annotates the temporal segments in the recorded demonstrations. CTR uses these annotations only to construct admissible training schedules.
+
+The practical effect is to separate two questions that are conflated in a raw demonstration: what local behavior should each arm execute, and which relative timings are actually constrained by the task. Within-arm order and local motion are always retained. Only cross-arm timing that is annotated as free is recombined.
+
+\subsection{Admissible schedule construction}
+A schedule $s$ is rejected when it violates a protected relation. Relative timing inside a coupled block is unchanged. Outside protected blocks, segment starts may be shifted so that independent work appears in different relative-progress contexts, including serial, overlapping, and partially overlapping executions. Sampling is performed over admissible schedules rather than over a fixed catalog of three canonical orders.
+
+\subsection{RobotSeg-based foreground extraction and main-view composition}
+For each real demonstration, the arm-local wrist streams remain aligned to their own source times. The main camera requires a new visual realization after temporal recombination. RobotSeg and related open-source recognition/segmentation tools identify the left arm, right arm, and task-relevant manipulated objects and extract foreground masks from recorded frames. CTR selects the foregrounds associated with $\phi_L^s(t)$ and $\phi_R^s(t)$ and composes them with the scene background according to Eq.~\ref{eq:compose}. The output is a near-realistic main-view video of the recombined dual-arm execution and is used only for schedules admitted by the protected task relations.
+
+\subsection{IdleMask routing}
+Artificial timeline gaps are not treated as expert decisions. IdleMask is applied only to the action coordinates of the arm and timesteps whose waiting was introduced by temporal recombination. For diffusion/flow-style learners the mask multiplies the corresponding denoising or velocity residual; for ACT it multiplies the action reconstruction term. The other arm's valid target at the same prediction step remains supervised. Required support and post-completion holding are not masked.
+
+\subsection{Held-out joint-progress construction}
+H1 and H2 are the mirror progress regions defined in the main text. H3 is the third late-mid/early-mid joint-progress split used by the experiment. Train/test separation is performed before evaluating the held-out pairings, and the intent is compositional: each arm's local progress state remains represented in training while the selected cross-arm pairing is withheld.
+
+\begin{table}[ht]
+\caption{Implementation metadata to release for reproducing CTR.}
+\label{tab:openconfig}
+\centering\small
+\begin{tabularx}{\linewidth}{lX}
+\toprule
+Component & Reproducibility fields \\
+\midrule
+Robot and observations & Arm/gripper hardware, cameras and placement, synchronization, proprioception, action coordinates, control frequency.\\
+Policy & Checkpoint/revision, DP/ACT/$\pi_{0.5}$ configuration, observation history, action chunk/prediction length, temporal aggregation, normalization.\\
+Optimization & Optimizer, learning-rate schedule, batch size, steps, trainable parameters, precision, seeds, checkpoint selection, compute.\\
+Temporal annotation & GPT-6 Astra version, prompt/schema, temporal-relation labels, generated video-annotation programs, produced annotations, any annotation review/correction procedure.\\
+Training schedules & Source demonstration IDs, sampled schedules, original/recombined mixture, valid action counts by arm/stage.\\
+Visual composition & RobotSeg/tool versions, detection/object assignment, masks, background extraction, composition rules, quality-control procedure.\\
+Constraints & Stage boundaries, prerequisites, support intervals, alignment blocks, exclusion geometry, schedule-rejection rules.\\
+Evaluation & Success predicates, time limits, waiting/motion thresholds, progress estimator, paired-pause matching, release events, safety rules.\\
+Statistics & Seed-specific counts and the interval/paired-resampling procedure used for final reporting.\\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\clearpage
+\section{Detailed timing-distribution results}
+\label{app:e1}
+C0 means both arms are unfinished; CL means the left arm is already complete; CR means the right arm is already complete. Waiting is in seconds and post-completion translation in centimeters. Each row contains three training seeds and 180 evaluations.
+{\setlength{\tabcolsep}{3pt}\placeholdertable{tables/e1_full.tex}}
+
+\clearpage
+\section{Detailed paired-pause results}
+\label{app:e2a}
+The paused arm is listed in the ``Arm'' column; both $\Delta W$ and $\Delta T_{\rm cap}$ concern the opposite, controlled arm. Durations are 1, 2, and 4 seconds with an eight-second response window. Each row contains three training seeds and 60 matched pairs (120 branch executions).
+{\setlength{\tabcolsep}{3pt}\placeholdertable{tables/freeze_full.tex}}
+
+\clearpage
+\section{Detailed held-out joint-progress results}
+\label{app:e2b}
+Each row contains three training seeds, 90 seen evaluations, and 90 held-out evaluations. Per-arm waiting is reported separately.
+{\setlength{\tabcolsep}{3pt}\placeholdertable{tables/heldout_full.tex}}
+
+\clearpage
+\section{Detailed generality and constraint results}
+\label{app:e3}
+D denotes the default condition, P prerequisite delay/release, X workspace occupancy/release, and I independent execution after cooperation. Simulated and real cells contain 150 and 60 evaluations, respectively. A dash indicates that the metric is not applicable to that task/condition.
+{\setlength{\tabcolsep}{3pt}\placeholdertable{tables/generality_full.tex}}
+
+\clearpage
+\section{Detailed safety and release outcomes}
+The safety table reports collision rate (CR), safety-intervention rate (SAR), dependency exposure, release latency, and nonresponse for the Experiment~3 conditions.
+{\setlength{\tabcolsep}{3pt}\placeholdertable{tables/safety_full.tex}}
+
+\clearpage
+\section{Detailed component-study results}
+\label{app:e4}
+``No mask'' is CTR without IdleMask and ``No main'' removes the main view. Each row lists three training seeds. PutCub cells contain 150 evaluations and 80 pairs; real cells contain 60 evaluations and 40 pairs. The main-text component table uses the real R1/R3 conditions.
+{\setlength{\tabcolsep}{3pt}\placeholdertable{tables/ablation_full.tex}}

@@ -1,0 +1,189 @@
+\relax 
+\providecommand\hyper@newdestlabel[2]{}
+\providecommand\HyField@AuxAddToFields[1]{}
+\providecommand\HyField@AuxAddToCoFields[2]{}
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces CTR{} broadens admissible schedules while preserving local motion and task-required coordination, reducing demonstrator-induced scheduling bias.}}{1}{figure.1}\protected@file@percent }
+\newlabel{fig:teaser}{{1}{1}{\method {} broadens admissible schedules while preserving local motion and task-required coordination, reducing demonstrator-induced scheduling bias}{figure.1}{}}
+\citation{chi2023diffusion,zhao2023act,pi2025pi05}
+\citation{dehaan2019causal}
+\citation{pitis2020coda}
+\citation{urpi2024caiac}
+\citation{ameperosa2025rocoda}
+\citation{mandlekar2023mimicgen}
+\citation{jiang2025dexmimicgen}
+\citation{zhao2026triman}
+\@writefile{toc}{\contentsline {section}{\numberline {1}Introduction}{2}{section.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {2}Related work}{2}{section.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Causal confusion and counterfactual augmentation.}{2}{section*.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Demonstration generation and multi-arm retiming.}{2}{section*.2}\protected@file@percent }
+\citation{jiang2025dif}
+\citation{zhai2026skillvla}
+\@writefile{toc}{\contentsline {paragraph}{Architectural separation and skill composition.}{3}{section*.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {3}Problem formulation: task dependence versus schedule dependence}{3}{section.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.1}A behavioral failure mode}{3}{subsection.3.1}\protected@file@percent }
+\newlabel{eq:invariance}{{1}{3}{A behavioral failure mode}{equation.1}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2}What is and is not identifiable}{3}{subsection.3.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {4}Constraint-Preserving Temporal Recombination}{3}{section.4}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces CTR{} data-processing pipeline. Foreground segmentation supports observation composition, and temporal recombination varies compatible arm-local schedules while preserving local motion and protected ordering. The displayed masks and sampled schedules are schematic.}}{4}{figure.2}\protected@file@percent }
+\newlabel{fig:method}{{2}{4}{\method {} data-processing pipeline. Foreground segmentation supports observation composition, and temporal recombination varies compatible arm-local schedules while preserving local motion and protected ordering. The displayed masks and sampled schedules are schematic}{figure.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.1}Annotate rescheduling degrees of freedom}{4}{subsection.4.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2}Recombine time while preserving local motion}{4}{subsection.4.2}\protected@file@percent }
+\newlabel{eq:dataset}{{2}{4}{Recombine time while preserving local motion}{equation.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.3}CTR on recorded real-robot data: two implementation issues}{4}{subsection.4.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Issue 1: reconstruct observations by visual composition.}{5}{section*.4}\protected@file@percent }
+\newlabel{eq:compose}{{3}{5}{Issue 1: reconstruct observations by visual composition}{equation.3}{}}
+\@writefile{toc}{\contentsline {paragraph}{Issue 2: remove synthetic waiting from supervision.}{5}{section*.5}\protected@file@percent }
+\newlabel{eq:loss}{{4}{5}{Issue 2: remove synthetic waiting from supervision}{equation.4}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {5}Experimental design: five questions about scheduling bias}{5}{section.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Controlled timing distributions.}{5}{section*.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Tasks and models.}{5}{section*.7}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Completion-state stress test on PutCub under five training timing distributions. $W_{\rm  unfinished}$ (s) measures unnecessary waiting of the arm that still has work to do; $M_{\rm  complete}$ (cm) measures motion of the arm whose responsibility is already complete.}}{6}{table.1}\protected@file@percent }
+\newlabel{tab:e1}{{1}{6}{Completion-state stress test on PutCub under five training timing distributions. $W_{\rm unfinished}$ (s) measures unnecessary waiting of the arm that still has work to do; $M_{\rm complete}$ (cm) measures motion of the arm whose responsibility is already complete}{table.1}{}}
+\@writefile{toc}{\contentsline {paragraph}{Diagnostics.}{6}{section*.8}\protected@file@percent }
+\newlabel{eq:start-order}{{5}{6}{Diagnostics}{equation.5}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {6}Diagnosing demonstrator-induced scheduling bias}{6}{section.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.1}Changing the demonstration schedule changes the learned execution schedule}{6}{subsection.6.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.2}Narrow schedule coverage creates brittle cross-arm behavior}{6}{subsection.6.2}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Paired other-arm pause intervention. Pausing one otherwise irrelevant arm induces unnecessary waiting in the unfrozen arm. Each point averages DP, ACT, and $\pi _{0.5}$ for one pause direction and duration; all condition-level results appear in Appendix~\ref {app:e2a}.}}{7}{figure.3}\protected@file@percent }
+\newlabel{fig:freeze}{{3}{7}{Paired other-arm pause intervention. Pausing one otherwise irrelevant arm induces unnecessary waiting in the unfrozen arm. Each point averages DP, ACT, and $\pi _{0.5}$ for one pause direction and duration; all condition-level results appear in Appendix~\ref {app:e2a}}{figure.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.3}Pausing an irrelevant arm transfers waiting to the other arm}{7}{subsection.6.3}\protected@file@percent }
+\newlabel{eq:paired_pause}{{6}{7}{Pausing an irrelevant arm transfers waiting to the other arm}{equation.6}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {7}Removing schedule bias without removing coordination}{7}{section.7}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces Default-condition success (\%) on four simulated and four real tasks. Each pair compares original demonstrations with CTR{} using the same policy family.}}{8}{table.2}\protected@file@percent }
+\newlabel{tab:generality}{{2}{8}{Default-condition success (\%) on four simulated and four real tasks. Each pair compares original demonstrations with \method {} using the same policy family}{table.2}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces Selective-coordination interventions, averaged over models within each task. Violation is DVR for prerequisite/alignment tasks and XR for shared-workspace tasks. Release measures latency after the prerequisite or workspace becomes available.}}{8}{table.3}\protected@file@percent }
+\newlabel{tab:constraints}{{3}{8}{Selective-coordination interventions, averaged over models within each task. Violation is DVR for prerequisite/alignment tasks and XR for shared-workspace tasks. Release measures latency after the prerequisite or workspace becomes available}{table.3}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {4}{\ignorespaces Performance on seen and held-out joint-progress combinations, macro-averaged over three models and three holdout splits. Gap is seen SR minus held-out SR in percentage points; waiting is summed over arms (s).}}{9}{table.4}\protected@file@percent }
+\newlabel{tab:heldout}{{4}{9}{Performance on seen and held-out joint-progress combinations, macro-averaged over three models and three holdout splits. Gap is seen SR minus held-out SR in percentage points; waiting is summed over arms (s)}{table.4}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {5}{\ignorespaces Real-robot component study on R1/R3 with DP and $\pi _{0.5}$. Labels is the reported number of valid supervised action elements in millions; $W$ is waiting (s), $M$ post-completion motion (cm), and $\Delta W$ paired extra waiting (s).}}{9}{table.5}\protected@file@percent }
+\newlabel{tab:ablation}{{5}{9}{Real-robot component study on R1/R3 with DP and $\pi _{0.5}$. Labels is the reported number of valid supervised action elements in millions; $W$ is waiting (s), $M$ post-completion motion (cm), and $\Delta W$ paired extra waiting (s)}{table.5}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {8}Generalization to held-out joint-progress combinations}{9}{section.8}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {9}What makes CTR work?}{9}{section.9}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Temporal variation does more than mask waiting labels.}{9}{section*.9}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{IdleMask matters once schedules are recombined.}{9}{section*.10}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{The reconstructed main view carries useful cross-arm context.}{10}{section*.11}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {10}Limitations}{10}{section.10}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {11}Conclusion}{10}{section.11}\protected@file@percent }
+\newlabel{sec:mainend}{{11}{10}{Conclusion}{section.11}{}}
+\bibstyle{plainnat}
+\bibdata{references}
+\bibcite{ameperosa2025rocoda}{{1}{2025}{{Ameperosa et~al.}}{{Ameperosa, Collins, Jain, and Garg}}}
+\bibcite{urpi2024caiac}{{2}{2024}{{Armengol~Urp{\'{i}} et~al.}}{{Armengol~Urp{\'{i}}, Bagatella, Vlastelica, and Martius}}}
+\bibcite{chi2023diffusion}{{3}{2023}{{Chi et~al.}}{{Chi, Xu, Feng, Cousineau, Du, Burchfiel, Tedrake, and Song}}}
+\bibcite{dehaan2019causal}{{4}{2019}{{de~Haan et~al.}}{{de~Haan, Jayaraman, and Levine}}}
+\bibcite{jiang2025dif}{{5}{2025{a}}{{Jiang et~al.}}{{Jiang, Wu, He, Zeng, Wei, Zhang, and Zheng}}}
+\bibcite{jiang2025dexmimicgen}{{6}{2025{b}}{{Jiang et~al.}}{{Jiang, Xie, Lin, Xu, Wan, Mandlekar, Fan, and Zhu}}}
+\bibcite{mandlekar2023mimicgen}{{7}{2023}{{Mandlekar et~al.}}{{Mandlekar, Nasiriany, Wen, Akinola, Narang, Fan, Zhu, and Fox}}}
+\bibcite{pi2025pi05}{{8}{2025}{{{Physical Intelligence} et~al.}}{{}}}
+\bibcite{pitis2020coda}{{9}{2020}{{Pitis et~al.}}{{Pitis, Creager, and Garg}}}
+\bibcite{zhai2026skillvla}{{10}{2026}{{Zhai et~al.}}{{Zhai, Huang, Wu, Zhao, Yu, Ren, Hao, and Soh}}}
+\bibcite{zhao2026triman}{{11}{2026}{{Zhao et~al.}}{{Zhao, Ba, and Zhi}}}
+\bibcite{zhao2023act}{{12}{2023}{{Zhao et~al.}}{{Zhao, Kumar, Levine, and Finn}}}
+\@writefile{toc}{\contentsline {section}{\numberline {A}Task and evaluation inventory}{13}{appendix.A}\protected@file@percent }
+\newlabel{app:tasks}{{A}{13}{Task and evaluation inventory}{appendix.A}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {6}{\ignorespaces Task mapping and protected temporal relationships. ``Independent'' refers to the indicated task phase; protected interactions remain unchanged during recombination.}}{13}{table.6}\protected@file@percent }
+\newlabel{tab:tasks}{{6}{13}{Task mapping and protected temporal relationships. ``Independent'' refers to the indicated task phase; protected interactions remain unchanged during recombination}{table.6}{}}
+\@writefile{toc}{\contentsline {paragraph}{Evaluation inventory.}{13}{section*.16}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Training groups.}{13}{section*.17}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {B}Metric definitions and aggregation}{13}{appendix.B}\protected@file@percent }
+\newlabel{app:metrics}{{B}{13}{Metric definitions and aggregation}{appendix.B}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {B.1}Success and failure-penalized completion time}{13}{subsection.B.1}\protected@file@percent }
+\newlabel{eq:metrics-success}{{7}{13}{Success and failure-penalized completion time}{equation.7}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {B.2}Unnecessary waiting}{14}{subsection.B.2}\protected@file@percent }
+\newlabel{eq:metrics-wait}{{8}{14}{Unnecessary waiting}{equation.8}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {B.3}Post-completion motion}{14}{subsection.B.3}\protected@file@percent }
+\newlabel{eq:metrics-motion}{{9}{14}{Post-completion motion}{equation.9}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {B.4}Paired other-arm pause effects}{14}{subsection.B.4}\protected@file@percent }
+\newlabel{eq:metrics-paired}{{10}{14}{Paired other-arm pause effects}{equation.10}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {B.5}Constraint, collision, and safety events}{14}{subsection.B.5}\protected@file@percent }
+\newlabel{eq:metrics-constraint}{{11}{14}{Constraint, collision, and safety events}{equation.11}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {B.6}Responding after a binding condition is released}{14}{subsection.B.6}\protected@file@percent }
+\newlabel{eq:metrics-release}{{12}{14}{Responding after a binding condition is released}{equation.12}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {B.7}Aggregation}{15}{subsection.B.7}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {C}CTR implementation details}{15}{appendix.C}\protected@file@percent }
+\newlabel{app:implementation}{{C}{15}{CTR implementation details}{appendix.C}{}}
+\@writefile{loa}{\contentsline {algorithm}{\numberline {1}{\ignorespaces CTR data-construction algorithm}}{15}{algorithm.1}\protected@file@percent }
+\newlabel{alg:ctr}{{1}{15}{CTR implementation details}{algorithm.1}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {C.1}GPT-6 Astra roles}{15}{subsection.C.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {C.2}Admissible schedule construction}{15}{subsection.C.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {C.3}RobotSeg-based foreground extraction and main-view composition}{16}{subsection.C.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {C.4}IdleMask routing}{16}{subsection.C.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {C.5}Held-out joint-progress construction}{16}{subsection.C.5}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {7}{\ignorespaces Implementation metadata to release for reproducing CTR.}}{16}{table.7}\protected@file@percent }
+\newlabel{tab:openconfig}{{7}{16}{Implementation metadata to release for reproducing CTR}{table.7}{}}
+\gdef \LT@i {\LT@entry 
+    {1}{29.49876pt}\LT@entry 
+    {1}{20.7508pt}\LT@entry 
+    {5}{30.66199pt}\LT@entry 
+    {5}{67.49426pt}\LT@entry 
+    {5}{26.25002pt}\LT@entry 
+    {5}{44.50192pt}\LT@entry 
+    {5}{44.50192pt}}
+\@writefile{toc}{\contentsline {section}{\numberline {D}Detailed timing-distribution results}{17}{appendix.D}\protected@file@percent }
+\newlabel{app:e1}{{D}{17}{Detailed timing-distribution results}{appendix.D}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {8}{All timing-distribution conditions. SR is in percent, times in seconds, and motion in centimeters. Bracketed intervals reproduce the condition-level interval fields.}}{17}{table.8}\protected@file@percent }
+\newlabel{tab:e1full}{{8}{17}{All timing-distribution conditions. SR is in percent, times in seconds, and motion in centimeters. Bracketed intervals reproduce the condition-level interval fields}{table.8}{}}
+\gdef \LT@ii {\LT@entry 
+    {1}{29.49876pt}\LT@entry 
+    {5}{30.66199pt}\LT@entry 
+    {1}{22.49686pt}\LT@entry 
+    {1}{26.86182pt}\LT@entry 
+    {5}{70.49123pt}\LT@entry 
+    {1}{30.60431pt}\LT@entry 
+    {1}{59.0002pt}}
+\@writefile{toc}{\contentsline {section}{\numberline {E}Detailed paired-pause results}{18}{appendix.E}\protected@file@percent }
+\newlabel{app:e2a}{{E}{18}{Detailed paired-pause results}{appendix.E}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {9}{All simulated paired-pause results. Each row records three training seeds, 60 matched pairs, 120 branch executions, and an eight-second response window.}}{18}{table.9}\protected@file@percent }
+\newlabel{tab:freezefull}{{9}{18}{All simulated paired-pause results. Each row records three training seeds, 60 matched pairs, 120 branch executions, and an eight-second response window}{table.9}{}}
+\gdef \LT@iii {\LT@entry 
+    {1}{29.49876pt}\LT@entry 
+    {1}{23.00967pt}\LT@entry 
+    {5}{30.66199pt}\LT@entry 
+    {1}{36.7527pt}\LT@entry 
+    {1}{73.5082pt}\LT@entry 
+    {5}{26.25002pt}\LT@entry 
+    {5}{44.50192pt}}
+\@writefile{toc}{\contentsline {section}{\numberline {F}Detailed held-out joint-progress results}{20}{appendix.F}\protected@file@percent }
+\newlabel{app:e2b}{{F}{20}{Detailed held-out joint-progress results}{appendix.F}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {10}{All held-out joint-progress results. Each row contains 90 seen and 90 held-out evaluations; H3 denotes the third late-mid/early-mid progress split.}}{20}{table.10}\protected@file@percent }
+\newlabel{tab:heldoutfull}{{10}{20}{All held-out joint-progress results. Each row contains 90 seen and 90 held-out evaluations; H3 denotes the third late-mid/early-mid progress split}{table.10}{}}
+\gdef \LT@iv {\LT@entry 
+    {1}{22.7759pt}\LT@entry 
+    {1}{27.75294pt}\LT@entry 
+    {1}{29.49876pt}\LT@entry 
+    {5}{35.99661pt}\LT@entry 
+    {5}{67.49426pt}\LT@entry 
+    {5}{26.25002pt}\LT@entry 
+    {1}{24.63896pt}\LT@entry 
+    {5}{21.75002pt}}
+\@writefile{toc}{\contentsline {section}{\numberline {G}Detailed generality and constraint results}{21}{appendix.G}\protected@file@percent }
+\newlabel{app:e3}{{G}{21}{Detailed generality and constraint results}{appendix.G}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {11}{All task and condition results. D: default; P: prerequisite delay/release; X: workspace occupancy/release; I: independent-after-cooperation. Rates are in percent. A dash means not applicable.}}{21}{table.11}\protected@file@percent }
+\newlabel{tab:genfull}{{11}{21}{All task and condition results. D: default; P: prerequisite delay/release; X: workspace occupancy/release; I: independent-after-cooperation. Rates are in percent. A dash means not applicable}{table.11}{}}
+\gdef \LT@v {\LT@entry 
+    {1}{22.7759pt}\LT@entry 
+    {1}{27.75294pt}\LT@entry 
+    {1}{29.49876pt}\LT@entry 
+    {5}{35.99661pt}\LT@entry 
+    {5}{21.75002pt}\LT@entry 
+    {1}{23.50485pt}\LT@entry 
+    {1}{39.9928pt}\LT@entry 
+    {1}{33.98952pt}\LT@entry 
+    {1}{36.49179pt}}
+\@writefile{toc}{\contentsline {section}{\numberline {H}Detailed safety and release outcomes}{23}{appendix.H}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {12}{Collision, safety intervention, dependency exposure, and release outcomes for every generality condition. All rates are percentages; release latency is in seconds. Raw interval columns are preserved in the accompanying CSV files.}}{23}{table.12}\protected@file@percent }
+\newlabel{tab:safetyfull}{{12}{23}{Collision, safety intervention, dependency exposure, and release outcomes for every generality condition. All rates are percentages; release latency is in seconds. Raw interval columns are preserved in the accompanying CSV files}{table.12}{}}
+\gdef \LT@vi {\LT@entry 
+    {5}{33.00879pt}\LT@entry 
+    {1}{29.49876pt}\LT@entry 
+    {5}{51.44052pt}\LT@entry 
+    {5}{67.49426pt}\LT@entry 
+    {5}{26.25002pt}\LT@entry 
+    {5}{21.75002pt}\LT@entry 
+    {5}{21.75002pt}\LT@entry 
+    {1}{23.72769pt}}
+\@writefile{toc}{\contentsline {section}{\numberline {I}Detailed component-study results}{25}{appendix.I}\protected@file@percent }
+\newlabel{app:e4}{{I}{25}{Detailed component-study results}{appendix.I}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {13}{Component-study results by task and model. The main-text summary uses the real R1/R3 conditions; the table retains the remaining reported ablations.}}{25}{table.13}\protected@file@percent }
+\newlabel{tab:ablfull}{{13}{25}{Component-study results by task and model. The main-text summary uses the real R1/R3 conditions; the table retains the remaining reported ablations}{table.13}{}}
+\gdef \@abspage@last{25}

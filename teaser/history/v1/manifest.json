@@ -1,0 +1,39 @@
+{
+  "main": "ctr_teaser.svg",
+  "size": [
+    1760,
+    870
+  ],
+  "modules": [
+    "modules/original-causal.svg",
+    "modules/original-preference.svg",
+    "modules/retimed-causal.svg",
+    "modules/retimed-preference.svg",
+    "modules/ctr-process.svg",
+    "modules/bc-before.svg",
+    "modules/bc-after.svg",
+    "modules/binding-prerequisite-example.svg",
+    "modules/irrelevant-progress-example.svg"
+  ],
+  "layers": [
+    "background",
+    "panel-headings",
+    "data-and-dependence-connectors",
+    "original-causal",
+    "original-preference",
+    "retimed-causal",
+    "retimed-preference",
+    "ctr-process",
+    "annotation-input",
+    "bc-before",
+    "bc-after",
+    "behavioral-selectivity",
+    "legend-and-scope"
+  ],
+  "presentation": "ctr_teaser_editable.pptx",
+  "pdf": "ctr_teaser.pdf",
+  "preview": "ctr_teaser_preview.png",
+  "slide_count": 1,
+  "native_groups": 13,
+  "native_objects": 214
+}

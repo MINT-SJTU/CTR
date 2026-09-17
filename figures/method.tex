@@ -1,0 +1,11 @@
+\begin{tikzpicture}[x=1cm,y=1cm,>=stealth,font=\small]
+\node[draw,rounded corners=2pt,text width=2.45cm,minimum height=1.55cm,align=center] (raw) at (0,0) {\textbf{Recorded demonstrations}\\Arm-local video, state, action};
+\node[draw,rounded corners=2pt,text width=2.45cm,minimum height=1.55cm,align=center] (ann) at (3.2,0) {\textbf{Temporal semantics}\\GPT-6 Astra: reschedulable vs. protected};
+\node[draw,rounded corners=2pt,text width=2.45cm,minimum height=1.55cm,align=center] (time) at (6.4,0) {\textbf{CTR schedules}\\Vary legal relative progress; preserve local motion};
+\node[draw,rounded corners=2pt,text width=2.55cm,minimum height=1.55cm,align=center] (real) at (9.65,0) {\textbf{Real-data realization}\\RobotSeg composition\\+ IdleMask};
+\node[draw,rounded corners=2pt,text width=2.35cm,minimum height=1.55cm,align=center] (learn) at (12.8,0) {\textbf{Joint policy}\\Unchanged learner; no deployment scheduler};
+\draw[->,thick] (raw)--(ann);
+\draw[->,thick] (ann)--(time);
+\draw[->,thick] (time)--(real);
+\draw[->,thick] (real)--(learn);
+\end{tikzpicture}

@@ -1,0 +1,10 @@
+{
+  "original_filename": "bimanual_experiments(3).json",
+  "raw_export_copy": "data/experiments.json",
+  "sha256": "8088ff75fc799b176c958761b9c83fb6575092bff79ff2e66b4e05f80feb7edc",
+  "source_scope": "Author-provided aggregate experimental results; method and task descriptions from the conversation; external references verified against primary sources. No policy training or robot rollouts were executed in the writing workflow.",
+  "style_git_blob_sha": "f61ad7efce0855557694078c0945e6c33feb8236",
+  "style_source": "https://github.com/ICLR/Master-Template/blob/master/iclr2027/iclr2027_conference.sty",
+  "reference_source": "references.bib contains primary-source URLs; descriptions concern the cited versions.",
+  "draft_status": "Complete manuscript draft with unresolved author-verification items; not a validated submission-ready result package."
+}

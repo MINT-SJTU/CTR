@@ -1,0 +1,73 @@
+{
+  "main": "ctr_teaser_v4.svg",
+  "size": [
+    1760,
+    870
+  ],
+  "task_colors": {
+    "pick": "#CC8068",
+    "open": "#4F9E98",
+    "place": "#648BB7",
+    "close": "#977CB0"
+  },
+  "stage_palettes": {
+    "independent": [
+      "#BEC8D1",
+      "#CC8068",
+      "#4F9E98",
+      "#648BB7"
+    ],
+    "causal": [
+      "#648BB7",
+      "#648BB7",
+      "#977CB0",
+      "#977CB0"
+    ]
+  },
+  "shared_phase_boundary": "#648BB7",
+  "dependence_colors": {
+    "bias": "#CF7956",
+    "causal": "#148F83",
+    "ctr": "#8870B5"
+  },
+  "compact_axis_labels": {
+    "source_mode": "drawio_compatible",
+    "x_optical_correction_px": 4
+  },
+  "modules": [
+    "modules/original-scheduling-bias.svg",
+    "modules/original-causal.svg",
+    "modules/retimed-scheduling-bias.svg",
+    "modules/retimed-causal.svg",
+    "modules/ctr-process.svg",
+    "modules/bc-before.svg",
+    "modules/bc-after.svg",
+    "modules/dependence-key.svg",
+    "modules/task-causal-structure.svg",
+    "modules/irrelevant-progress-example.svg",
+    "modules/binding-prerequisite-example.svg"
+  ],
+  "layers": [
+    "background",
+    "panel-headings",
+    "data-and-dependence-connectors",
+    "original-scheduling-bias",
+    "original-causal",
+    "retimed-scheduling-bias",
+    "retimed-causal",
+    "ctr-process",
+    "annotation-input",
+    "bc-before",
+    "bc-after",
+    "dependence-key",
+    "behavioral-selectivity",
+    "task-causal-structure"
+  ],
+  "presentation": "ctr_teaser_editable_v4.pptx",
+  "pdf": "ctr_teaser_v4.pdf",
+  "preview": "ctr_teaser_preview_v4.png",
+  "readme": "README_zh_v4.md",
+  "slide_count": 1,
+  "native_groups": 14,
+  "native_objects": 193
+}

@@ -1,0 +1,23 @@
+<?xml version='1.0' encoding='utf-8'?>
+<ns0:svg xmlns:ns0="http://www.w3.org/2000/svg" width="130" height="260" viewBox="989 403 130 260"><ns0:g id="ctr-teaser-module" transform="translate(0 -70)">
+<ns0:rect x="992" y="476" width="124" height="253" rx="12" fill="#F5F1FA" stroke="#C9BADE" stroke-width="1.5" opacity="1" />
+<ns0:path d="M 1037.85,498.55 H 1044.5 C 1053.05,498.55 1054.95,519.45 1063.5,519.45 H 1071.1" stroke="#8870B5" fill="none" stroke-width="2.6599999999999997" stroke-linecap="round" stroke-linejoin="round" opacity="1" />
+<ns0:path d="M 1037.85,519.45 H 1044.5 C 1053.05,519.45 1054.95,498.55 1063.5,498.55 H 1071.1" stroke="#8870B5" fill="none" stroke-width="2.6599999999999997" stroke-linecap="round" stroke-linejoin="round" opacity="1" />
+<ns0:path d="M 1065.4,492.85 L 1071.1,498.55 L 1065.4,504.25 M 1065.4,513.75 L 1071.1,519.45 L 1065.4,525.15" stroke="#8870B5" fill="none" stroke-width="2.6599999999999997" stroke-linecap="round" stroke-linejoin="round" opacity="1" />
+<ns0:text x="1054" y="547" font-family="Arial, Helvetica, sans-serif" font-size="20" fill="#8870B5" font-weight="700" text-anchor="middle">Recombine</ns0:text>
+<ns0:path d="M 1012,562 H 1096" stroke="#DFD5EB" fill="none" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" opacity="1" />
+<ns0:text x="1054" y="602" font-family="Arial, Helvetica, sans-serif" font-size="34" fill="#8870B5" font-weight="700" text-anchor="middle">CTR</ns0:text>
+<ns0:text x="1054" y="630" font-family="Arial, Helvetica, sans-serif" font-size="19" fill="#6F7B88" font-weight="400" text-anchor="middle">Keep local</ns0:text>
+<ns0:text x="1054" y="654" font-family="Arial, Helvetica, sans-serif" font-size="19" fill="#6F7B88" font-weight="400" text-anchor="middle">arm motion</ns0:text>
+<ns0:path d="M 1012,668 H 1096" stroke="#DFD5EB" fill="none" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" opacity="1" />
+<ns0:rect x="1045.6" y="688.3" width="16.799999999999997" height="14.7" rx="2.0999999999999996" fill="none" stroke="#148F83" stroke-width="1.54" opacity="1" />
+<ns0:path d="M 1049.1,688.3 V 682.7 C 1049.1,676.4 1058.9,676.4 1058.9,682.7 V 688.3" stroke="#148F83" fill="none" stroke-width="1.54" stroke-linecap="round" stroke-linejoin="round" opacity="1" />
+<ns0:circle cx="1054" cy="693.9" r="1.4" fill="#148F83" stroke="none" stroke-width="2" />
+<ns0:path d="M 1054,694.6 V 698.1" stroke="#148F83" fill="none" stroke-width="1.19" stroke-linecap="round" stroke-linejoin="round" opacity="1" />
+<ns0:text x="1054" y="720" font-family="Arial, Helvetica, sans-serif" font-size="20" fill="#148F83" font-weight="700" text-anchor="middle">Preserve</ns0:text>
+<ns0:path d="M 1138,582 L 1123,582" stroke="#8870B5" fill="none" stroke-width="2.7" stroke-linecap="round" stroke-linejoin="round" opacity="1" />
+<ns0:path d="M 1123,582 L 1129.0,585.0 L 1129.0,579.0 Z" stroke="none" fill="#8870B5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="1" />
+<ns0:path d="M 984,582 L 969,582" stroke="#8870B5" fill="none" stroke-width="2.7" stroke-linecap="round" stroke-linejoin="round" opacity="1" />
+<ns0:path d="M 969,582 L 975.0,585.0 L 975.0,579.0 Z" stroke="none" fill="#8870B5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="1" />
+</ns0:g>
+</ns0:svg>

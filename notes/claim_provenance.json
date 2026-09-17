@@ -1,0 +1,70 @@
+{
+  "note": "Descriptive cell means only. No aggregate CIs. Values are computed from rounded input cell estimates; no hidden precision is recovered.",
+  "claims": [
+    {
+      "claim": "4-s freeze extra waiting, Mix3 vs CTR",
+      "source": "e2a_paired_freeze",
+      "filter": {
+        "domain": "sim",
+        "freeze_duration_s": 4.0
+      },
+      "field": "delta_wait_s",
+      "aggregation": "unweighted mean over 3 models and 2 frozen-arm directions within each group",
+      "baseline": 2.151666666666667,
+      "ours": 0.8283333333333333,
+      "unit": "seconds"
+    },
+    {
+      "claim": "held-out SR, Mix3 vs CTR",
+      "source": "e2b_heldout_schedule",
+      "field": "sr_holdout_pct",
+      "aggregation": "unweighted mean over 3 models and H1,H2,H3 within each group",
+      "baseline": 69.86666666666666,
+      "ours": 79.8,
+      "unit": "percent"
+    },
+    {
+      "claim": "default real SR, original vs CTR",
+      "source": "e3_generality_constraints",
+      "filter": {
+        "domain": "real",
+        "condition": "Default"
+      },
+      "field": "sr_pct",
+      "aggregation": "unweighted mean over R1--R4 and 3 models within each group",
+      "baseline": 62.71666666666667,
+      "ours": 79.5,
+      "unit": "percent"
+    },
+    {
+      "claim": "Fixed+Mask vs CTR real component study",
+      "source": "e4_ablation",
+      "filter": {
+        "domain": "real"
+      },
+      "fields": [
+        "sr_pct",
+        "wait_s",
+        "motion_cm",
+        "delta_wait_s"
+      ],
+      "aggregation": "unweighted mean over R1,R3 and DP,pi0.5 within each group",
+      "valid_action_elements_both": 930000
+    },
+    {
+      "claim": "already-complete conditions, Mix3 vs CTR",
+      "source": "e1_timing_bias",
+      "filter": {
+        "condition": [
+          "CL_left_complete",
+          "CR_right_complete"
+        ]
+      },
+      "fields": {
+        "unfinished_wait": "wait_R_s for CL; wait_L_s for CR",
+        "completed_motion": "motion_L_cm for CL; motion_R_cm for CR"
+      },
+      "aggregation": "mean over 3 models and 2 initial conditions within each group"
+    }
+  ]
+}

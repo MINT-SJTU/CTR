@@ -1,0 +1,56 @@
+{\small
+\begin{longtable}{lllrrrrr}
+\caption{Component-study results by task and model. The main-text summary uses the real R1/R3 conditions; the table retains the remaining reported ablations.}\label{tab:ablfull}\\
+\toprule
+Task & Model & Data & SR [interval] & $T_{\rm cap}$ & $W$ & $M$ & $\Delta W$ \\
+\midrule
+\endfirsthead
+\toprule
+Task & Model & Data & SR [interval] & $T_{\rm cap}$ & $W$ & $M$ & $\Delta W$ \\
+\midrule
+\endhead
+\midrule\multicolumn{8}{r}{Continued on next page}\\
+\endfoot
+\bottomrule
+\endlastfoot
+PutCub & DP & Fixed & 66.8\, [62.8, 70.8] & 24.06 & 4.53 & 5.29 & 2.71 \\
+PutCub & DP & Fixed+Mask & 71.3\, [67.3, 75.3] & 23.83 & 3.36 & 3.91 & 1.92 \\
+PutCub & DP & No mask & 75.6\, [71.6, 79.6] & 22.53 & 2.84 & 3.20 & 1.44 \\
+PutCub & DP & \method & 80.3\, [76.3, 84.3] & 22.91 & 1.19 & 1.27 & 0.48 \\
+PutCub & DP & No main & 75.8\, [71.8, 79.8] & 23.40 & 2.03 & 2.82 & 0.97 \\
+\midrule
+PutCub & $\pi_{0.5}$ & Fixed & 69.0\, [65.0, 73.0] & 23.92 & 4.82 & 5.16 & 2.75 \\
+PutCub & $\pi_{0.5}$ & Fixed+Mask & 74.6\, [70.6, 78.6] & 23.52 & 3.40 & 3.93 & 1.87 \\
+PutCub & $\pi_{0.5}$ & No mask & 78.7\, [74.7, 82.7] & 22.84 & 2.41 & 3.24 & 1.43 \\
+PutCub & $\pi_{0.5}$ & \method & 82.0\, [78.0, 86.0] & 22.42 & 1.33 & 1.70 & 0.47 \\
+PutCub & $\pi_{0.5}$ & No main & 79.5\, [75.5, 83.5] & 22.85 & 2.26 & 2.34 & 1.02 \\
+\midrule
+R1 & DP & Fixed & 63.1\, [58.1, 68.1] & 24.09 & 4.57 & 5.38 & 2.82 \\
+R1 & DP & Fixed+Mask & 66.2\, [61.2, 71.2] & 23.44 & 3.24 & 4.21 & 1.78 \\
+R1 & DP & No mask & 71.6\, [66.6, 76.6] & 22.88 & 2.83 & 3.23 & 1.23 \\
+R1 & DP & \method & 75.0\, [70.0, 80.0] & 23.23 & 1.19 & 1.48 & 0.45 \\
+R1 & DP & No main & 70.0\, [65.0, 75.0] & 23.20 & 2.10 & 2.44 & 0.96 \\
+R1 & DP & Real-Multi & 72.3\, [67.3, 77.3] & 23.21 & 1.27 & 1.97 & 0.64 \\
+\midrule
+R1 & $\pi_{0.5}$ & Fixed & 63.3\, [58.3, 68.3] & 23.70 & 4.71 & 5.18 & 2.88 \\
+R1 & $\pi_{0.5}$ & Fixed+Mask & 70.0\, [65.0, 75.0] & 23.01 & 3.43 & 4.27 & 1.92 \\
+R1 & $\pi_{0.5}$ & No mask & 74.1\, [69.1, 79.1] & 23.28 & 2.84 & 3.12 & 1.34 \\
+R1 & $\pi_{0.5}$ & \method & 76.3\, [71.3, 81.3] & 22.80 & 1.23 & 1.14 & 0.50 \\
+R1 & $\pi_{0.5}$ & No main & 71.8\, [66.8, 76.8] & 23.57 & 2.30 & 2.81 & 0.97 \\
+R1 & $\pi_{0.5}$ & Real-Multi & 76.7\, [71.7, 81.7] & 23.21 & 1.42 & 1.52 & 0.70 \\
+\midrule
+R3 & DP & Fixed & 63.1\, [58.1, 68.1] & 23.83 & 4.56 & 5.41 & 2.83 \\
+R3 & DP & Fixed+Mask & 68.2\, [63.2, 73.2] & 23.69 & 3.47 & 4.27 & 1.86 \\
+R3 & DP & No mask & 70.9\, [65.9, 75.9] & 23.81 & 2.36 & 2.98 & 1.38 \\
+R3 & DP & \method & 74.3\, [69.3, 79.3] & 22.65 & 1.04 & 1.68 & 0.50 \\
+R3 & DP & No main & 69.6\, [64.6, 74.6] & 23.17 & 2.26 & 2.89 & 1.06 \\
+R3 & DP & Real-Multi & 71.8\, [66.8, 76.8] & 23.30 & 1.37 & 1.91 & 0.63 \\
+\midrule
+R3 & $\pi_{0.5}$ & Fixed & 65.0\, [60.0, 70.0] & 23.91 & 4.46 & 5.49 & 2.90 \\
+R3 & $\pi_{0.5}$ & Fixed+Mask & 68.2\, [63.2, 73.2] & 23.54 & 3.49 & 4.35 & 1.83 \\
+R3 & $\pi_{0.5}$ & No mask & 71.0\, [66.0, 76.0] & 23.69 & 2.83 & 2.98 & 1.34 \\
+R3 & $\pi_{0.5}$ & \method & 76.7\, [71.7, 81.7] & 22.51 & 1.20 & 1.31 & 0.48 \\
+R3 & $\pi_{0.5}$ & No main & 74.6\, [69.6, 79.6] & 23.15 & 2.32 & 2.85 & 1.03 \\
+R3 & $\pi_{0.5}$ & Real-Multi & 76.4\, [71.4, 81.4] & 22.55 & 1.42 & 2.01 & 0.71 \\
+\end{longtable}
+}

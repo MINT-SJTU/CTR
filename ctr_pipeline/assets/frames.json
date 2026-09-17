@@ -1,0 +1,68 @@
+{
+  "source_video": "/Users/shuyuan/Downloads/drawer-output000-original-source003-top (1).mp4",
+  "ctr_video": "/Users/shuyuan/Downloads/drawer-no-stop-review-156-20260915/videos/episode_000.mp4",
+  "source_actions": [
+    {
+      "action": "approach",
+      "time_s": 8.8,
+      "crop_xyxy": [
+        60,
+        0,
+        540,
+        480
+      ]
+    },
+    {
+      "action": "pick",
+      "time_s": 11.25,
+      "crop_xyxy": [
+        60,
+        0,
+        540,
+        480
+      ]
+    },
+    {
+      "action": "grasp_drawer",
+      "time_s": 5.3,
+      "crop_xyxy": [
+        320,
+        0,
+        800,
+        480
+      ]
+    },
+    {
+      "action": "open",
+      "time_s": 7.8,
+      "crop_xyxy": [
+        320,
+        0,
+        800,
+        480
+      ]
+    },
+    {
+      "action": "place",
+      "time_s": 14.3,
+      "crop_xyxy": [
+        180,
+        0,
+        660,
+        480
+      ]
+    },
+    {
+      "action": "close",
+      "time_s": 20.0,
+      "crop_xyxy": [
+        320,
+        0,
+        800,
+        480
+      ]
+    }
+  ],
+  "source_fps": 30,
+  "note": "Action listing follows the requested schematic order; original chronology is grasp/open before approach/pick."
+}

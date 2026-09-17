@@ -1,0 +1,50 @@
+{
+  "width_mm": 180,
+  "height_mm": 67.5,
+  "colors": {
+    "pick": "#CC8068",
+    "open": "#4F9E98",
+    "place": "#648BB7",
+    "close": "#977CB0",
+    "ctr": "#8870B5"
+  },
+  "foreground_masks": "Illustrative manually traced vector overlays, not RobotSeg outputs; disclosed here and in README, explanatory caption removed at user request.",
+  "source_keyframe_order": "Requested schematic task order, differs from source chronology.",
+  "ctr_examples": "The recomposed-video filmstrip was removed at user request; its extracted source assets remain available.",
+  "joint_progress": "13 monotone trajectories and OKLab field from user-supplied generate_figure.py; schematic, not empirical density.",
+  "protected_joint_progress": "One lower-right place-before-close trajectory, in the teaser blue/purple palette.",
+  "schedule_samples": [
+    {
+      "sample": 1,
+      "pick_start": 0,
+      "open_start": 40,
+      "duration": 104,
+      "photo_order": [
+        "pick",
+        "open"
+      ]
+    },
+    {
+      "sample": 2,
+      "pick_start": 0,
+      "open_start": 6,
+      "duration": 104,
+      "photo_order": [
+        "pick",
+        "open"
+      ]
+    },
+    {
+      "sample": 3,
+      "pick_start": 40,
+      "open_start": 0,
+      "duration": 104,
+      "photo_order": [
+        "open",
+        "pick"
+      ]
+    }
+  ],
+  "joint_plot_side": 126,
+  "dataset_stack": "Three identical copies of the complete six-frame card, translated only."
+}
