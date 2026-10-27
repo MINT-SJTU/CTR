@@ -34,7 +34,8 @@ python main.py --input /path/to/input.mp4 --task drawer \
 自动导出入口针对 PiperX、LeRobot v3 和抽屉任务。左右臂分别采用六个角度值
 （度）和一个夹爪值（毫米）；其他机器人或任务必须适配，不能直接套用。
 参见[数据集命令、同步和验证](docs/datasets.md)。三维检查还需要机器人运动学、
-网格和标定信息，具体依赖见 [THIRD_PARTY.md](THIRD_PARTY.md)。
+网格和标定信息，可视化和运动学代码已合入本仓库。安装与资产获取见[机器人资产说明](docs/robot-assets.md)，
+公开来源和许可见 [THIRD_PARTY.md](THIRD_PARTY.md)。
 
 ## 新任务：语言描述＋视频 → Agent 生成脚本
 
@@ -47,7 +48,7 @@ Agent 需要先观察视频并明确任务依赖，再复用现有模块生成�
 ## 验证与许可
 
 ```bash
-python -m pip install -e '.[interaction,test]'
+python -m pip install -e '.[interaction,visualization,test]'
 python -m pytest -q -rs
 ```
 

@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>robo-visualize</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<main class="app-shell">
+  <header class="topbar">
+    <div>
+      <p class="eyebrow" id="viewer-eyebrow">ROBO-VISUALIZE</p>
+      <h1 id="viewer-title">Robot viewer</h1>
+    </div>
+    <div class="selectors">
+      <label>
+        Dataset
+        <select id="dataset-select"></select>
+      </label>
+      <label>
+        Episode
+        <select id="episode-select"></select>
+      </label>
+      <label id="signal-control">
+        Signal
+        <select id="signal-select"></select>
+      </label>
+      <button id="refresh-datasets" type="button" hidden>Refresh</button>
+      <button id="reset-view" type="button">Reset 3D</button>
+    </div>
+  </header>
+
+  <section class="workspace" aria-label="synchronized viewer">
+    <article class="panel model-panel">
+      <div class="panel-title">
+        <span id="trajectory-label">3D trajectory</span>
+        <span id="frame-label" class="mono">frame —</span>
+      </div>
+      <div id="scene" aria-label="robot 3D model"></div>
+      <div class="arm-legend" id="arm-legend" aria-label="arm color legend"></div>
+    </article>
+    <section class="camera-grid" id="camera-grid" aria-label="recorded camera views"></section>
+  </section>
+
+  <section class="transport panel" aria-label="playback controls">
+    <button id="play-button" class="play-button" type="button" aria-label="play">▶</button>
+    <div class="timeline-wrap">
+      <div class="timeline-meta">
+        <span id="time-label" class="mono">00:00.000 / 00:00.000</span>
+        <span id="meta-label">Loading…</span>
+        <span id="phase-label" class="phase-label" hidden></span>
+      </div>
+      <input id="timeline" type="range" min="0" max="1" step="0.001" value="0" aria-label="time">
+    </div>
+    <label class="rate-control">
+      Speed
+      <select id="rate-select">
+        <option value="0.25">0.25x</option>
+        <option value="0.5">0.5x</option>
+        <option value="1" selected>1x</option>
+        <option value="1.5">1.5x</option>
+        <option value="2">2x</option>
+      </select>
+    </label>
+    <span id="status" role="status">Initializing</span>
+  </section>
+</main>
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.164.1/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.164.1/examples/jsm/"
+  }
+}
+</script>
+</body>
+</html>
+<script type="module" src="/static/app.js?v=20260830-live-1"></script>

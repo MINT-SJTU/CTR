@@ -1,0 +1,2 @@
+# Preserve attributed robot snapshots byte-for-byte, including upstream CRLF.
+src/robo_visualize/arms/piperx/assets/urdf/*.urdf whitespace=-blank-at-eol,-blank-at-eof

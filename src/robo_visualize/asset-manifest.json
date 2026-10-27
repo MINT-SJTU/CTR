@@ -1,0 +1,65 @@
+{
+  "schema": 1,
+  "piperx": [
+    {
+      "path": "gripper/gripper_base.STL",
+      "sha256": "2895bfa6f1eef2d0ad2cb9dfdedd5f6c760ec07388bcde2b4d1e412e1189c9cb",
+      "url": "https://raw.githubusercontent.com/agilexrobotics/piper_ros/ac41fcbcdda598f01b51cf6175ed9a24d0dacadc/src/piper_description/meshes/gripper_base.STL"
+    },
+    {
+      "path": "gripper/link7.STL",
+      "sha256": "475a7d8db056524d7659fadf5a2c307d62791047b6214d733dfc7846ed1c613d",
+      "url": "https://raw.githubusercontent.com/agilexrobotics/piper_ros/ac41fcbcdda598f01b51cf6175ed9a24d0dacadc/src/piper_description/meshes/link7.STL"
+    },
+    {
+      "path": "gripper/link8.STL",
+      "sha256": "3f88d534a85e28a33ef7d2061adacbd1d25214aa9325f9e464aad0f9e4b74606",
+      "url": "https://raw.githubusercontent.com/agilexrobotics/piper_ros/ac41fcbcdda598f01b51cf6175ed9a24d0dacadc/src/piper_description/meshes/link8.STL"
+    },
+    {
+      "path": "meshes/Link6.STL",
+      "sha256": "0861e122e406f891a57a550551ad1ce0ef4ca5babf58f476cf8914395e144319",
+      "url": "https://raw.githubusercontent.com/agilexrobotics/piper_isaac_sim/8e1f88fdb7afca49c40e9a0c1c01cc588e86f0d2/piper_x_description/meshes/Link6.STL"
+    },
+    {
+      "path": "meshes/dae/J1.dae",
+      "sha256": "e78dee99bc84857c09183463f3fb3fdea292ea7570f1bfb0001a79674bb69d45",
+      "url": "https://raw.githubusercontent.com/agilexrobotics/piper_isaac_sim/8e1f88fdb7afca49c40e9a0c1c01cc588e86f0d2/piper_x_description/meshes/dae/J1.dae"
+    },
+    {
+      "path": "meshes/dae/J2.dae",
+      "sha256": "97e9079580af6e423317c33b2a0f4fe0f6dbc67c3e1d9e6f4836c87c6c8f34a2",
+      "url": "https://raw.githubusercontent.com/agilexrobotics/piper_isaac_sim/8e1f88fdb7afca49c40e9a0c1c01cc588e86f0d2/piper_x_description/meshes/dae/J2.dae"
+    },
+    {
+      "path": "meshes/dae/J3.dae",
+      "sha256": "db5b39eef745655a67e57870d8ee56f26a03651d2161635ca2ec3c58c9269907",
+      "url": "https://raw.githubusercontent.com/agilexrobotics/piper_isaac_sim/8e1f88fdb7afca49c40e9a0c1c01cc588e86f0d2/piper_x_description/meshes/dae/J3.dae"
+    },
+    {
+      "path": "meshes/dae/J4.dae",
+      "sha256": "ccc08d3ef1cb8bdfb8ab5395ff65893d13386ad526d7bc954d468b7dc885d557",
+      "url": "https://raw.githubusercontent.com/agilexrobotics/piper_isaac_sim/8e1f88fdb7afca49c40e9a0c1c01cc588e86f0d2/piper_x_description/meshes/dae/J4.dae"
+    },
+    {
+      "path": "meshes/dae/J5.dae",
+      "sha256": "78718679ffdf9d81130047c4267ed66a081315eff36f216833bc3781c6241417",
+      "url": "https://raw.githubusercontent.com/agilexrobotics/piper_isaac_sim/8e1f88fdb7afca49c40e9a0c1c01cc588e86f0d2/piper_x_description/meshes/dae/J5.dae"
+    },
+    {
+      "path": "meshes/dae/base_link.dae",
+      "sha256": "486dddcd07f072b2e3978087dc2f9b641a91722bccb1bcb3421c4c7ce64a39ed",
+      "bundled": "arms/piperx/assets/meshes/dae/base_link.dae"
+    },
+    {
+      "path": "urdf/piper_x_description.urdf",
+      "sha256": "54cce00b9f9cc0cc6e617da6c47d541d0757eb67dce7e6c3381453df02540a04",
+      "bundled": "arms/piperx/assets/urdf/piper_x_description.urdf"
+    },
+    {
+      "path": "urdf/piper_x_description_no_gripper.urdf",
+      "sha256": "d6dc6d31b0fa56341b2323fee5e8a375c2500ae6fb02e31fb52e8e917b608439",
+      "bundled": "arms/piperx/assets/urdf/piper_x_description_no_gripper.urdf"
+    }
+  ]
+}

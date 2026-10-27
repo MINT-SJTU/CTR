@@ -39,8 +39,9 @@ python -m pip install -e '.[interaction,segmentation,test]'
 
 The default backend is SAM2. Model identities are pinned in
 `src/real_robot_data_retime/segmentation/model_versions.py`. Weights download
-separately and retain their upstream terms. Mesh scheduling additionally needs
-`.[collision]` and the dependencies described in [dataset processing](docs/datasets.md).
+separately and retain their upstream terms. Mesh scheduling uses the integrated `robo_visualize` package. Install `.[piperx]`
+and run the verified asset downloader described in [robot assets](docs/robot-assets.md).
+SO-101 and RoboTwin viewers are also included and use separate environment extras.
 
 ## Process a video
 
@@ -58,6 +59,17 @@ rendering checks. Review the output for arm completeness, duplicated objects,
 release ownership, occlusions and transitions. Uncertain evidence must remain
 visible in the report rather than being promoted to a successful demonstration.
 
+## Visualize and qualify robot geometry
+
+```bash
+python -m pip install -e '.[piperx]'
+robo-visualize-assets --output /path/to/piperx-assets
+export CTR_PIPERX_ASSETS=/path/to/piperx-assets
+robo-visualize-piperx-web --dataset-path /path/to/lerobot-dataset
+```
+
+See [asset setup, public sources and viewer environments](docs/robot-assets.md).
+
 ## Process a dataset
 
 Start with [dataset processing and validation](docs/datasets.md), including the
@@ -69,7 +81,7 @@ is included.
 ## Development and verification
 
 ```bash
-python -m pip install -e '.[interaction,test]'
+python -m pip install -e '.[interaction,visualization,test]'
 python -m pytest -q
 ```
 

@@ -5,5 +5,7 @@
   "publication_base_commit": "365b737ce0b0e4763ecc7d277fa19a8517fc1e21",
   "prepared_date": "2026-10-28",
   "license": "MIT",
-  "status": "candidate; private geometry dependency unresolved"
+  "status": "release prepared; integration qualified on CPU with downloaded PiperX geometry",
+  "robo_visualize_source": "https://github.com/Shiki42/robo-visualize",
+  "robo_visualize_commit": "cb5cca927b9be76a5a1b8a953a061a233ed3ec1f"
 }

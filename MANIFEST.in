@@ -1,0 +1,8 @@
+include README.md README_zh.md THIRD_PARTY.md LICENSE AGENTS.md main.py batch.py
+recursive-include docs *.md *.json
+recursive-include examples *.md
+recursive-include scripts *.py
+recursive-include assets *.urdf *.json
+recursive-include licenses *.txt
+recursive-include tests *.py *.json *.npz *.cjs
+recursive-include web *.md *.js *.css *.html

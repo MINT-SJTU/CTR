@@ -26,8 +26,9 @@ Retiming separately appends a labelled synthetic terminal hold (60 frames at
 
 ## Export the drawer dataset
 
-Install collision dependencies with `python -m pip install -e '.[collision]'`.
-The geometry integration needs a compatible PiperX model and mesh assets; consult
+Install PiperX dependencies with `python -m pip install -e '.[piperx]'` and run
+`robo-visualize-assets --output /path/to/robot/assets` (see [asset setup](robot-assets.md)).
+The geometry integration uses the bundled PiperX model code and verified mesh assets; consult
 [third-party dependencies](../THIRD_PARTY.md) for their availability and identity.
 The URDF and actual inter-arm base placement must match your recording. In this
 source snapshot `PiperXClearance` defaults to 0.59 m base spacing; do not infer a

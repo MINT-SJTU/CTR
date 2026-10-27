@@ -30,6 +30,24 @@ LeRobot export has been certified for this release. Tests requiring a generated
 drawer episode or real scene remain separate acceptance checks. No policy training,
 evaluation or robot motion was launched.
 
-Publication is pending resolution of the private geometry dependency described in
-[THIRD_PARTY.md](../THIRD_PARTY.md). The candidate lives on the preparation host;
-this document does not claim a published release or public end-to-end reproducibility.
+The private geometry dependency was resolved by integrating RoboVisualize commit
+`cb5cca927b9be76a5a1b8a953a061a233ed3ec1f`. PiperX assets were downloaded from
+fixed public revisions and all 12 output files were SHA-256 verified. The
+integrated suite passed 372 tests with 4 skips, including PiperX kinematics and
+real mesh collision checks. The remaining skips concern real-video/dataset
+fixtures and optional torch probes. This is not a newly certified video
+segmentation or full dataset-export result. SO-101/RoboTwin source adapters are
+included; their complete optional environments were not qualified in this check.
+
+See [THIRD_PARTY.md](../THIRD_PARTY.md) and [robot assets](robot-assets.md) for
+source hashes, download/bundling policy, upstream notices and geometry limitations.
+
+The merged package also passed a clean CPU-only install (364 passed, 12 optional
+integration skips), wheel/sdist resource and license checks, an installed-wheel
+asset download with all 12 hashes verified, and wheel-only PiperX model loading
+with 10 visual meshes. Browser mask-timeline and preview syntax checks passed.
+
+Final source-environment regression with the merged package and verified PiperX
+assets: **374 passed, 2 skipped**. Only the real-video scene fixture and generated
+drawer-dataset fixture were unavailable. No new GPU video processing or complete
+dataset export was run as part of packaging.

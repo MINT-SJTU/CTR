@@ -1,10 +1,15 @@
-# PiperX geometry snapshot
+# Robot geometry provenance
 
-`piper_x_description.urdf` is copied from the user-specified RoboVisualize local
-checkout on 2026-09-09. It includes the uncommitted gripper_base_joint rotation
-`rpy="0 0 1.5708"`. Other local RoboVisualize changes were left untouched.
+`piper_x_description.urdf` is the CTR snapshot retained for the drawer exporter.
+Its source and SHA-256 are recorded in `provenance.json`. Relative to the original
+RoboVisualize description it uses the supplied gripper mount rotation
+`rpy="0 0 1.5708"`, normalized LF line endings and stripped trailing whitespace.
 
-Mesh filenames resolve against the assets directory supplied by the installed
-RoboVisualize checkout. Robot FK is reused from `PiperXModel` in that project.
-Both bases face +X and are placed at Y=+0.245 m and Y=-0.245 m, respectively,
-matching RoboVisualize's `DualPiperXBackend` default.
+The original RoboVisualize PiperX description and this CTR description are kept
+as distinct calibrated inputs. Mesh files are resolved against the explicit
+`--mesh-root` from the verified asset downloader. The collision checker defaults
+to 0.59 m inter-arm base spacing; verify the actual geometry for each recording.
+
+Public robot asset repositories, fixed revisions, exact file hashes and modified
+snapshots are listed in `robot-sources.json`. See
+[robot asset setup](../docs/robot-assets.md) and [third-party notices](../THIRD_PARTY.md).

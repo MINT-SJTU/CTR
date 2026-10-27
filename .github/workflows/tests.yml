@@ -10,9 +10,24 @@ jobs:
           python-version: '3.11'
           cache: pip
       - run: sudo apt-get update && sudo apt-get install -y ffmpeg
-      - run: python -m pip install -e '.[interaction,test]'
+      - run: python -m pip install -e '.[interaction,test,visualization]'
       - run: python -m pytest -q -rs
       - uses: actions/setup-node@v4
         with:
           node-version: 22
       - run: node tests/web/arm-mask-timeline.cjs
+  piperx:
+    runs-on: ubuntu-latest
+    env:
+      CTR_PIPERX_ASSETS: /tmp/ctr-piperx-assets
+      ROBOVISUALIZE_ASSETS: /tmp/ctr-piperx-assets
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+      - run: sudo apt-get update && sudo apt-get install -y ffmpeg
+      - run: python -m pip install -e '.[interaction,piperx,test]'
+      - run: robo-visualize-assets --output /tmp/ctr-piperx-assets
+      - run: python -m pytest -q -rs

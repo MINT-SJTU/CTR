@@ -13,19 +13,32 @@ dependencies = [
   "datasets>=3.0",
   "numpy>=1.26",
   "opencv-python-headless>=4.8",
-  "pyarrow>=15",
+  "pyarrow==23.0.1",
 ]
 
 [project.optional-dependencies]
 test = ["pytest>=8"]
+visualization = ["flask==3.1.3"]
+piperx = ["flask==3.1.3", "pin==2.7.0", "numpy>=1.26,<2"]
+robotwin = ["flask==3.1.3", "h5py==3.12.1", "pin==3.9.0", "pyyaml==6.0.3"]
+so101 = ["flask==3.1.3", "coal==3.0.2", "open3d==0.19.0", "pin==3.9.0", "pyarrow==23.0.1"]
 interaction = ["scipy>=1.11", "matplotlib>=3.8", "scikit-image>=0.24"]
 collision = ["pin==2.7.0", "numpy>=1.26,<2"]
 segmentation = ["torch==2.8.0", "torchvision==0.23.0", "transformers==5.16.1", "accelerate>=1.0", "einops>=0.8", "cotracker @ git+https://github.com/facebookresearch/co-tracker.git@82e02e8029753ad4ef13cf06be7f4fc5facdda4d"]
 
 [project.scripts]
+robo-visualize-assets = "robo_visualize.assets:main"
+robo-visualize-robotwin-web = "robo_visualize.arms.robotwin.server:main"
+robo-visualize-so101-web = "robo_visualize.arms.so101.server:main"
+robo-visualize-so101-render = "robo_visualize.arms.so101.cli:main"
+robo-visualize-piperx-web = "robo_visualize.arms.piperx.server:main"
+robo-visualize-piperx-live-web = "robo_visualize.arms.piperx.live_server:main"
 real-robot-trim = "real_robot_data_retime.trim:main"
 real-robot-retime = "real_robot_data_retime.dataset:main"
 real-robot-retime-validate = "real_robot_data_retime.validate:main"
+
+[tool.setuptools]
+license-files = ["LICENSE", "licenses/*.txt"]
 
 [tool.setuptools.packages.find]
 where = ["src"]
@@ -35,3 +48,9 @@ testpaths = ["tests"]
 
 [tool.setuptools.package-data]
 "real_robot_data_retime" = ["preview/*.html"]
+
+"robo_visualize" = ["asset-manifest.json"]
+"robo_visualize.web" = ["static/*"]
+"robo_visualize.arms.robotwin" = ["static/*"]
+"robo_visualize.arms.so101" = ["assets/*.urdf", "assets/assets/*.stl"]
+"robo_visualize.arms.piperx" = ["assets/urdf/*.urdf", "assets/meshes/dae/*.dae"]

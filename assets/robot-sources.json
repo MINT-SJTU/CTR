@@ -1,0 +1,349 @@
+{
+  "schema": 1,
+  "robo_visualize_repository": "https://github.com/Shiki42/robo-visualize",
+  "robo_visualize_commit": "cb5cca927b9be76a5a1b8a953a061a233ed3ec1f",
+  "assets": [
+    {
+      "arm": "piperx",
+      "local": "gripper/gripper_base.STL",
+      "sha256": "2895bfa6f1eef2d0ad2cb9dfdedd5f6c760ec07388bcde2b4d1e412e1189c9cb",
+      "sources": [
+        [
+          "piper_isaac",
+          "agilexrobotics/piper_isaac_sim",
+          "8e1f88fdb7afca49c40e9a0c1c01cc588e86f0d2",
+          "piper_description/meshes/gripper_base.STL"
+        ],
+        [
+          "piper_ros",
+          "agilexrobotics/piper_ros",
+          "ac41fcbcdda598f01b51cf6175ed9a24d0dacadc",
+          "src/piper_description/meshes/gripper_base.STL"
+        ]
+      ]
+    },
+    {
+      "arm": "piperx",
+      "local": "gripper/link7.STL",
+      "sha256": "475a7d8db056524d7659fadf5a2c307d62791047b6214d733dfc7846ed1c613d",
+      "sources": [
+        [
+          "piper_isaac",
+          "agilexrobotics/piper_isaac_sim",
+          "8e1f88fdb7afca49c40e9a0c1c01cc588e86f0d2",
+          "piper_description/meshes/link7.STL"
+        ],
+        [
+          "piper_ros",
+          "agilexrobotics/piper_ros",
+          "ac41fcbcdda598f01b51cf6175ed9a24d0dacadc",
+          "src/piper_description/meshes/link7.STL"
+        ]
+      ]
+    },
+    {
+      "arm": "piperx",
+      "local": "gripper/link8.STL",
+      "sha256": "3f88d534a85e28a33ef7d2061adacbd1d25214aa9325f9e464aad0f9e4b74606",
+      "sources": [
+        [
+          "piper_isaac",
+          "agilexrobotics/piper_isaac_sim",
+          "8e1f88fdb7afca49c40e9a0c1c01cc588e86f0d2",
+          "piper_description/meshes/link8.STL"
+        ],
+        [
+          "piper_ros",
+          "agilexrobotics/piper_ros",
+          "ac41fcbcdda598f01b51cf6175ed9a24d0dacadc",
+          "src/piper_description/meshes/link8.STL"
+        ]
+      ]
+    },
+    {
+      "arm": "piperx",
+      "local": "meshes/Link6.STL",
+      "sha256": "0861e122e406f891a57a550551ad1ce0ef4ca5babf58f476cf8914395e144319",
+      "sources": [
+        [
+          "piper_isaac",
+          "agilexrobotics/piper_isaac_sim",
+          "8e1f88fdb7afca49c40e9a0c1c01cc588e86f0d2",
+          "piper_x_description/meshes/Link6.STL"
+        ]
+      ]
+    },
+    {
+      "arm": "piperx",
+      "local": "meshes/dae/J1.dae",
+      "sha256": "e78dee99bc84857c09183463f3fb3fdea292ea7570f1bfb0001a79674bb69d45",
+      "sources": [
+        [
+          "piper_isaac",
+          "agilexrobotics/piper_isaac_sim",
+          "8e1f88fdb7afca49c40e9a0c1c01cc588e86f0d2",
+          "piper_x_description/meshes/dae/J1.dae"
+        ]
+      ]
+    },
+    {
+      "arm": "piperx",
+      "local": "meshes/dae/J2.dae",
+      "sha256": "97e9079580af6e423317c33b2a0f4fe0f6dbc67c3e1d9e6f4836c87c6c8f34a2",
+      "sources": [
+        [
+          "piper_isaac",
+          "agilexrobotics/piper_isaac_sim",
+          "8e1f88fdb7afca49c40e9a0c1c01cc588e86f0d2",
+          "piper_x_description/meshes/dae/J2.dae"
+        ]
+      ]
+    },
+    {
+      "arm": "piperx",
+      "local": "meshes/dae/J3.dae",
+      "sha256": "db5b39eef745655a67e57870d8ee56f26a03651d2161635ca2ec3c58c9269907",
+      "sources": [
+        [
+          "piper_isaac",
+          "agilexrobotics/piper_isaac_sim",
+          "8e1f88fdb7afca49c40e9a0c1c01cc588e86f0d2",
+          "piper_x_description/meshes/dae/J3.dae"
+        ]
+      ]
+    },
+    {
+      "arm": "piperx",
+      "local": "meshes/dae/J4.dae",
+      "sha256": "ccc08d3ef1cb8bdfb8ab5395ff65893d13386ad526d7bc954d468b7dc885d557",
+      "sources": [
+        [
+          "piper_isaac",
+          "agilexrobotics/piper_isaac_sim",
+          "8e1f88fdb7afca49c40e9a0c1c01cc588e86f0d2",
+          "piper_x_description/meshes/dae/J4.dae"
+        ]
+      ]
+    },
+    {
+      "arm": "piperx",
+      "local": "meshes/dae/J5.dae",
+      "sha256": "78718679ffdf9d81130047c4267ed66a081315eff36f216833bc3781c6241417",
+      "sources": [
+        [
+          "piper_isaac",
+          "agilexrobotics/piper_isaac_sim",
+          "8e1f88fdb7afca49c40e9a0c1c01cc588e86f0d2",
+          "piper_x_description/meshes/dae/J5.dae"
+        ]
+      ]
+    },
+    {
+      "arm": "piperx",
+      "local": "meshes/dae/base_link.dae",
+      "sha256": "486dddcd07f072b2e3978087dc2f9b641a91722bccb1bcb3421c4c7ce64a39ed",
+      "sources": []
+    },
+    {
+      "arm": "piperx",
+      "local": "urdf/piper_x_description.urdf",
+      "sha256": "54cce00b9f9cc0cc6e617da6c47d541d0757eb67dce7e6c3381453df02540a04",
+      "sources": []
+    },
+    {
+      "arm": "piperx",
+      "local": "urdf/piper_x_description_no_gripper.urdf",
+      "sha256": "d6dc6d31b0fa56341b2323fee5e8a375c2500ae6fb02e31fb52e8e917b608439",
+      "sources": []
+    },
+    {
+      "arm": "so101",
+      "local": "assets/base_motor_holder_so101_v1.stl",
+      "sha256": "8cd2f241037ea377af1191fffe0dd9d9006beea6dcc48543660ed41647072424",
+      "sources": [
+        [
+          "so101",
+          "TheRobotStudio/SO-ARM100",
+          "a758567c3978dfeefe282ede0500085a48fe8f78",
+          "Simulation/SO101/assets/base_motor_holder_so101_v1.stl"
+        ]
+      ]
+    },
+    {
+      "arm": "so101",
+      "local": "assets/base_so101_v2.stl",
+      "sha256": "bb12b7026575e1f70ccc7240051f9d943553bf34e5128537de6cd86fae33924d",
+      "sources": [
+        [
+          "so101",
+          "TheRobotStudio/SO-ARM100",
+          "a758567c3978dfeefe282ede0500085a48fe8f78",
+          "Simulation/SO101/assets/base_so101_v2.stl"
+        ]
+      ]
+    },
+    {
+      "arm": "so101",
+      "local": "assets/motor_holder_so101_base_v1.stl",
+      "sha256": "31242ae6fb59d8b15c66617b88ad8e9bded62d57c35d11c0c43a70d2f4caa95b",
+      "sources": [
+        [
+          "so101",
+          "TheRobotStudio/SO-ARM100",
+          "a758567c3978dfeefe282ede0500085a48fe8f78",
+          "Simulation/SO101/assets/motor_holder_so101_base_v1.stl"
+        ]
+      ]
+    },
+    {
+      "arm": "so101",
+      "local": "assets/motor_holder_so101_wrist_v1.stl",
+      "sha256": "887f92e6013cb64ea3a1ab8675e92da1e0beacfd5e001f972523540545e08011",
+      "sources": [
+        [
+          "so101",
+          "TheRobotStudio/SO-ARM100",
+          "a758567c3978dfeefe282ede0500085a48fe8f78",
+          "Simulation/SO101/assets/motor_holder_so101_wrist_v1.stl"
+        ]
+      ]
+    },
+    {
+      "arm": "so101",
+      "local": "assets/moving_jaw_so101_v1.stl",
+      "sha256": "785a9dded2f474bc1d869e0d3dae398a3dcd9c0c345640040472210d2861fa9d",
+      "sources": [
+        [
+          "so101",
+          "TheRobotStudio/SO-ARM100",
+          "a758567c3978dfeefe282ede0500085a48fe8f78",
+          "Simulation/SO101/assets/moving_jaw_so101_v1.stl"
+        ]
+      ]
+    },
+    {
+      "arm": "so101",
+      "local": "assets/rotation_pitch_so101_v1.stl",
+      "sha256": "9be900cc2a2bf718102841ef82ef8d2873842427648092c8ed2ca1e2ef4ffa34",
+      "sources": [
+        [
+          "so101",
+          "TheRobotStudio/SO-ARM100",
+          "a758567c3978dfeefe282ede0500085a48fe8f78",
+          "Simulation/SO101/assets/rotation_pitch_so101_v1.stl"
+        ]
+      ]
+    },
+    {
+      "arm": "so101",
+      "local": "assets/sts3215_03a_no_horn_v1.stl",
+      "sha256": "75ef3781b752e4065891aea855e34dc161a38a549549cd0970cedd07eae6f887",
+      "sources": [
+        [
+          "so101",
+          "TheRobotStudio/SO-ARM100",
+          "a758567c3978dfeefe282ede0500085a48fe8f78",
+          "Simulation/SO101/assets/sts3215_03a_no_horn_v1.stl"
+        ]
+      ]
+    },
+    {
+      "arm": "so101",
+      "local": "assets/sts3215_03a_v1.stl",
+      "sha256": "a37c871fb502483ab96c256baf457d36f2e97afc9205313d9c5ab275ef941cd0",
+      "sources": [
+        [
+          "so101",
+          "TheRobotStudio/SO-ARM100",
+          "a758567c3978dfeefe282ede0500085a48fe8f78",
+          "Simulation/SO101/assets/sts3215_03a_v1.stl"
+        ]
+      ]
+    },
+    {
+      "arm": "so101",
+      "local": "assets/under_arm_so101_v1.stl",
+      "sha256": "d01d1f2de365651dcad9d6669e94ff87ff7652b5bb2d10752a66a456a86dbc71",
+      "sources": [
+        [
+          "so101",
+          "TheRobotStudio/SO-ARM100",
+          "a758567c3978dfeefe282ede0500085a48fe8f78",
+          "Simulation/SO101/assets/under_arm_so101_v1.stl"
+        ]
+      ]
+    },
+    {
+      "arm": "so101",
+      "local": "assets/upper_arm_so101_v1.stl",
+      "sha256": "475056e03a17e71919b82fd88ab9a0b898ab50164f2a7943652a6b2941bb2d4f",
+      "sources": [
+        [
+          "so101",
+          "TheRobotStudio/SO-ARM100",
+          "a758567c3978dfeefe282ede0500085a48fe8f78",
+          "Simulation/SO101/assets/upper_arm_so101_v1.stl"
+        ]
+      ]
+    },
+    {
+      "arm": "so101",
+      "local": "assets/waveshare_mounting_plate_so101_v2.stl",
+      "sha256": "e197e24005a07d01bbc06a8c42311664eaeda415bf859f68fa247884d0f1a6e9",
+      "sources": [
+        [
+          "so101",
+          "TheRobotStudio/SO-ARM100",
+          "a758567c3978dfeefe282ede0500085a48fe8f78",
+          "Simulation/SO101/assets/waveshare_mounting_plate_so101_v2.stl"
+        ]
+      ]
+    },
+    {
+      "arm": "so101",
+      "local": "assets/wrist_roll_follower_so101_v1.stl",
+      "sha256": "4b17b410a12d64ec39554abc3e8054d8a97384b2dc4a8d95a5ecb2a93670f5f4",
+      "sources": [
+        [
+          "so101",
+          "TheRobotStudio/SO-ARM100",
+          "a758567c3978dfeefe282ede0500085a48fe8f78",
+          "Simulation/SO101/assets/wrist_roll_follower_so101_v1.stl"
+        ]
+      ]
+    },
+    {
+      "arm": "so101",
+      "local": "assets/wrist_roll_pitch_so101_v2.stl",
+      "sha256": "6c7ec5525b4d8b9e397a30ab4bb0037156a5d5f38a4adf2c7d943d6c56eda5ae",
+      "sources": [
+        [
+          "so101",
+          "TheRobotStudio/SO-ARM100",
+          "a758567c3978dfeefe282ede0500085a48fe8f78",
+          "Simulation/SO101/assets/wrist_roll_pitch_so101_v2.stl"
+        ]
+      ]
+    },
+    {
+      "arm": "so101",
+      "local": "so101_new_calib.urdf",
+      "sha256": "1ea7a9cc9773bb0e91aa3eb5c68a0c82eab929cbfa2188b89cf0071425617d5b",
+      "sources": []
+    }
+  ],
+  "piperx_evo_source": {
+    "repository": "https://github.com/linsun449/evo-rl",
+    "commit": "5a63e2ba7002f4c76a289af5ef9e93928aae8779",
+    "files": {
+      "src/lerobot/assets/piper_x_description/meshes/dae/base_link.dae": "486dddcd07f072b2e3978087dc2f9b641a91722bccb1bcb3421c4c7ce64a39ed",
+      "src/lerobot/assets/piper_x_description/urdf/piper_x_description_no_gripper.urdf": "d6dc6d31b0fa56341b2323fee5e8a375c2500ae6fb02e31fb52e8e917b608439"
+    },
+    "verification": "exact match to published Git LFS SHA-256 OIDs; snapshots retained because upstream LFS media returned 404"
+  },
+  "derived_urdfs": {
+    "piper_x_description.urdf": "RoboVisualize gripper/TCP integration on the Evo-RL no-gripper robot; package mesh paths; preserved as supplied",
+    "assets/piper_x_description.urdf": "CTR normalized LF snapshot with gripper mount rpy 0 0 1.5708; see assets/provenance.json",
+    "so101_new_calib.urdf": "RoboVisualize snapshot based on TheRobotStudio/SO-ARM100 Simulation/SO101/so101_new_calib.urdf; adapted by the source project; not asserted byte-identical"
+  }
+}
