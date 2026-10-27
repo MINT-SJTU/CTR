@@ -1,0 +1,642 @@
+{
+  "source_repo": "Shiki42/piperx-screw-0910-25ep-raw",
+  "source_revision": "824b6382ef4858213e6ea42ea61104110d911448",
+  "episode_index": 1,
+  "camera": "observation.images.right_environment_1",
+  "coupled_intervals": [
+    [
+      365,
+      435
+    ],
+    [
+      805,
+      895
+    ],
+    [
+      1310,
+      1370
+    ],
+    [
+      1785,
+      1985
+    ],
+    [
+      2405,
+      2460
+    ]
+  ],
+  "positions": [
+    0.15,
+    0.5,
+    0.85
+  ],
+  "boundary_method": "left final pre-contact adjustment is completed before waiting; ep002 round4 first approach and correction protected from frame1740",
+  "workspace_split_x": 330,
+  "collision_policy": "independent pickup workspaces assumed disjoint as specified by user; no new metric collision claim",
+  "left_scene_boxes": [
+    [
+      245,
+      160,
+      175,
+      130
+    ]
+  ],
+  "right_segmentation_prompts": [
+    {
+      "source_frame": 330,
+      "bbox": [
+        350,
+        75,
+        290,
+        325
+      ],
+      "positive_points": [
+        [
+          475,
+          170
+        ],
+        [
+          575,
+          270
+        ],
+        [
+          510,
+          310
+        ]
+      ],
+      "negative_points": [
+        [
+          150,
+          350
+        ]
+      ]
+    },
+    {
+      "source_frame": 810,
+      "bbox": [
+        325,
+        175,
+        315,
+        305
+      ],
+      "positive_points": [
+        [
+          460,
+          290
+        ],
+        [
+          575,
+          355
+        ],
+        [
+          480,
+          425
+        ]
+      ],
+      "negative_points": [
+        [
+          150,
+          350
+        ]
+      ]
+    },
+    {
+      "source_frame": 1300,
+      "bbox": [
+        320,
+        80,
+        320,
+        390
+      ],
+      "positive_points": [
+        [
+          465,
+          200
+        ],
+        [
+          545,
+          280
+        ],
+        [
+          460,
+          390
+        ]
+      ],
+      "negative_points": [
+        [
+          150,
+          350
+        ]
+      ]
+    },
+    {
+      "source_frame": 1810,
+      "bbox": [
+        325,
+        175,
+        315,
+        305
+      ],
+      "positive_points": [
+        [
+          465,
+          310
+        ],
+        [
+          580,
+          400
+        ],
+        [
+          500,
+          460
+        ]
+      ],
+      "negative_points": [
+        [
+          150,
+          350
+        ]
+      ]
+    },
+    {
+      "source_frame": 2380,
+      "bbox": [
+        320,
+        0,
+        320,
+        340
+      ],
+      "positive_points": [
+        [
+          460,
+          80
+        ],
+        [
+          580,
+          175
+        ],
+        [
+          450,
+          230
+        ]
+      ],
+      "negative_points": [
+        [
+          150,
+          350
+        ]
+      ]
+    }
+  ],
+  "prompt_method": "automatic left prompts in rounds 1-2; reviewed manual left prompts in rounds 3-5 and right prompts in every round; all recorded explicitly",
+  "left_segmentation_prompts": [
+    null,
+    null,
+    {
+      "source_frame": 1050,
+      "bbox": [
+        0,
+        140,
+        310,
+        270
+      ],
+      "positive_points": [
+        [
+          80,
+          200
+        ],
+        [
+          160,
+          205
+        ],
+        [
+          190,
+          290
+        ],
+        [
+          205,
+          340
+        ]
+      ],
+      "negative_points": [
+        [
+          360,
+          210
+        ],
+        [
+          600,
+          400
+        ]
+      ]
+    },
+    {
+      "source_frame": 1510,
+      "bbox": [
+        0,
+        5,
+        250,
+        330
+      ],
+      "positive_points": [
+        [
+          70,
+          90
+        ],
+        [
+          130,
+          140
+        ],
+        [
+          110,
+          235
+        ],
+        [
+          150,
+          285
+        ]
+      ],
+      "negative_points": [
+        [
+          360,
+          210
+        ],
+        [
+          600,
+          400
+        ]
+      ]
+    },
+    {
+      "source_frame": 2130,
+      "bbox": [
+        0,
+        60,
+        180,
+        315
+      ],
+      "positive_points": [
+        [
+          40,
+          210
+        ],
+        [
+          50,
+          275
+        ],
+        [
+          95,
+          330
+        ]
+      ],
+      "negative_points": [
+        [
+          360,
+          210
+        ],
+        [
+          600,
+          400
+        ]
+      ]
+    }
+  ],
+  "segmentation_overrides": [
+    {
+      "cycle": 4,
+      "side": 1,
+      "start": 1985,
+      "stop": 2200,
+      "source_frame": 1985,
+      "bbox": [
+        430,
+        70,
+        210,
+        390
+      ],
+      "positive_points": [
+        [
+          570,
+          185
+        ],
+        [
+          570,
+          370
+        ]
+      ],
+      "negative_points": [
+        [
+          270,
+          400
+        ]
+      ]
+    }
+  ],
+  "ready_frames": [
+    [
+      340,
+      350
+    ],
+    [
+      805,
+      790
+    ],
+    [
+      1310,
+      1295
+    ],
+    [
+      1785,
+      1778
+    ],
+    [
+      2404,
+      2390
+    ]
+  ],
+  "brake_seconds": 0.5,
+  "restart_seconds": 0.3,
+  "ready_pose_method": "candidate waiting poses for the earlier arm; later arm flows through; short leads use positive-speed approach adjustment",
+  "right_payload_prompts": [
+    [
+      {
+        "pickup_frame": 259,
+        "source_frame": 350,
+        "bbox": [
+          309,
+          115,
+          62,
+          150
+        ],
+        "positive_points": [
+          [
+            337,
+            148
+          ],
+          [
+            327,
+            234
+          ]
+        ],
+        "negative_points": [
+          [
+            380,
+            210
+          ],
+          [
+            330,
+            187
+          ]
+        ]
+      }
+    ],
+    [
+      {
+        "pickup_frame": 718,
+        "source_frame": 790,
+        "bbox": [
+          350,
+          170,
+          110,
+          160
+        ],
+        "positive_points": [
+          [
+            427,
+            207
+          ],
+          [
+            374,
+            300
+          ]
+        ],
+        "negative_points": [
+          [
+            470,
+            275
+          ],
+          [
+            408,
+            250
+          ]
+        ]
+      }
+    ],
+    [
+      {
+        "pickup_frame": 1230,
+        "source_frame": 1295,
+        "bbox": [
+          322,
+          60,
+          78,
+          202
+        ],
+        "positive_points": [
+          [
+            367,
+            95
+          ],
+          [
+            343,
+            224
+          ]
+        ],
+        "negative_points": [
+          [
+            425,
+            170
+          ],
+          [
+            354,
+            152
+          ]
+        ]
+      }
+    ],
+    [
+      {
+        "pickup_frame": 1716,
+        "source_frame": 1778,
+        "bbox": [
+          380,
+          78,
+          106,
+          213
+        ],
+        "positive_points": [
+          [
+            445,
+            117
+          ],
+          [
+            402,
+            257
+          ]
+        ],
+        "negative_points": [
+          [
+            480,
+            210
+          ],
+          [
+            429,
+            190
+          ]
+        ]
+      }
+    ],
+    [
+      {
+        "pickup_frame": 2311,
+        "source_frame": 2390,
+        "bbox": [
+          300,
+          0,
+          70,
+          193
+        ],
+        "positive_points": [
+          [
+            332,
+            28
+          ],
+          [
+            324,
+            157
+          ]
+        ],
+        "negative_points": [
+          [
+            355,
+            90
+          ],
+          [
+            420,
+            120
+          ]
+        ]
+      }
+    ]
+  ],
+  "right_retreat_ends": [
+    469,
+    989,
+    1427,
+    2063,
+    2607
+  ],
+  "right_retreat_end_method": "reviewed settled pose after downward withdrawal; final cycle retains the recorded episode end",
+  "readiness_source_data_sha256": "ca3f91e6352542587231b5885d43a3dfe322f03018418842c8bd969413d2fdb2",
+  "final_left_pose_evidence": [
+    {
+      "source_reference_frame": 365,
+      "final_left_source_frame": 340,
+      "joint_tolerance_deg": 0.05,
+      "gripper_tolerance_mm": 0.1,
+      "max_state_action_difference": [
+        0.0,
+        0.0,
+        0.0,
+        0.01300048828125,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "source_reference_frame": 805,
+      "final_left_source_frame": 805,
+      "joint_tolerance_deg": 0.05,
+      "gripper_tolerance_mm": 0.1,
+      "max_state_action_difference": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "source_reference_frame": 1310,
+      "final_left_source_frame": 1310,
+      "joint_tolerance_deg": 0.05,
+      "gripper_tolerance_mm": 0.1,
+      "max_state_action_difference": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "source_reference_frame": 1785,
+      "final_left_source_frame": 1785,
+      "joint_tolerance_deg": 0.05,
+      "gripper_tolerance_mm": 0.1,
+      "max_state_action_difference": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "source_reference_frame": 2405,
+      "final_left_source_frame": 2404,
+      "joint_tolerance_deg": 0.05,
+      "gripper_tolerance_mm": 0.1,
+      "max_state_action_difference": [
+        0.0,
+        0.0,
+        0.0,
+        0.04699993133544922,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    }
+  ]
+}

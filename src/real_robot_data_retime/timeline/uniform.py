@@ -1,0 +1,119 @@
+"""Uniform relative onset sampling for two prerequisite stages."""
+
+import numpy as np
+
+
+def uniform_samples(source_index, source_count):
+    if source_count < 1 or not 0 <= source_index < source_count:
+        raise ValueError("invalid source episode index/count")
+    # One point in each half. Unlike parity filtering this works for even N too.
+    return [
+        (source_index + source_count * variant) / (2 * source_count)
+        for variant in range(2)
+    ]
+
+
+def stage_delays(a_frames, b_frames, position):
+    if not np.isfinite([a_frames, b_frames, position]).all():
+        raise ValueError("nonfinite stage timing")
+    if (
+        a_frames != int(a_frames)
+        or b_frames != int(b_frames)
+        or min(a_frames, b_frames) <= 0
+        or not 0 <= position <= 1
+    ):
+        raise ValueError("invalid stage duration or uniform position")
+    width = a_frames + b_frames
+    requested = a_frames - position * width
+    delta = int(np.floor(requested + 0.5))
+    return dict(
+        position=float(position),
+        a_frames=int(a_frames),
+        b_frames=int(b_frames),
+        width_frames=int(width),
+        requested_relative_start_frames=float(requested),
+        relative_start_frames=delta,
+        rounding_error_frames=float(delta - requested),
+        left_delay_frames=max(0, -delta),
+        right_delay_frames=max(0, delta),
+    )
+
+
+def uniform_lift_profile(start, stop, peak, opening, position, fps):
+    """Use recorded-speed lift unless B finishes after natural lift arrival."""
+    from .smooth import lift_clock
+    clock = np.arange(start, stop + 1, dtype=float)
+    peak_index = int(peak - start)
+    timing = stage_delays(peak_index, opening, position)
+    needs_wait = (timing['right_delay_frames'] + opening
+                  > timing['left_delay_frames'] + peak_index)
+    ramps = None
+    if needs_wait:
+        clock, peak_index, ramps = lift_clock(start, stop, peak, fps)
+        timing = stage_delays(peak_index, opening, position)
+    return clock, peak_index, ramps, timing
+
+
+def validate_stage_schedule(left, right, stages):
+    left, right = np.asarray(left), np.asarray(right)
+    if (
+        left.ndim != 1
+        or left.shape != right.shape
+        or len(left) < 2
+        or not np.isfinite([left, right]).all()
+        or np.any(np.diff(left) < 0)
+        or np.any(np.diff(right) < 0)
+    ):
+        raise ValueError("invalid monotone paired source clocks")
+    u = stages["uniform"]
+    # The first nonzero clock interval starts at the preceding output frame.
+    starts = [int(np.flatnonzero(np.diff(x) > 1e-9)[0]) for x in (left, right)]
+    if starts[1] - starts[0] != u["relative_start_frames"]:
+        raise ValueError("scheduler changed the sampled relative onset")
+    peak, opened = stages["peak_source_frame"], stages["open_source_frame"]
+    if np.any((left[1:] > peak) & (right[:-1] < opened)):
+        raise ValueError("insertion interval starts before drawer opening")
+    if np.any(
+        (right[1:] >= stages["close_source_frame"])
+        & (left[:-1] < stages["withdrawal_source_frame"])
+    ):
+        raise ValueError("drawer closing starts before withdrawal")
+    arrival = int(np.flatnonzero(left == peak)[0])
+    opening = int(np.flatnonzero(right == opened)[0])
+    ready = int(np.flatnonzero(right == stages["right_ready_source_frame"])[0])
+    if arrival - starts[0] != u["a_frames"] or ready - starts[1] != u["b_frames"]:
+        raise ValueError("scheduler changed a sampled prerequisite duration")
+    from .synchronized_drawer import validate_common_phase
+    common = validate_common_phase(left, right, stages['synchronized_interaction'])
+    return dict(
+        synchronized_interaction=common,
+        left_start_frame=starts[0],
+        right_start_frame=starts[1],
+        lift_peak_frame=arrival,
+        drawer_open_frame=opening,
+        right_ready_frame=ready,
+        insertion_start_frame=int(np.flatnonzero(left > peak)[0]) - 1,
+        passed=True,
+    )
+
+
+def validate_open_phase_motion(state, action, right, opening, closing):
+    """Only bounded measured AND commanded stillness may be removed after B."""
+    clock = np.unique(np.asarray(right))
+    tolerance = np.array([0.3] * 6 + [0.5])
+    for start, stop in zip(clock[:-1], clock[1:]):
+        if stop - start <= 1 or stop <= opening or start >= closing:
+            continue
+        for values in (state, action):
+            interval = np.asarray(values)[
+                int(np.floor(start)) : int(np.ceil(stop)) + 1, 7:
+            ]
+            if np.any(np.ptp(interval, axis=0) > tolerance + 1e-9):
+                raise ValueError(
+                    "right-arm post-opening motion was removed from source clock"
+                )
+    return dict(
+        passed=True,
+        opening_source_frame=int(opening),
+        closing_source_frame=int(closing),
+    )

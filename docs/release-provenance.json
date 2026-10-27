@@ -1,0 +1,9 @@
+{
+  "source_repository": "https://github.com/Shiki42/real-robot-data-retime",
+  "source_commit": "623770e401fd5ba6cdb9b991ef9a8c582675b74f",
+  "publication_repository": "https://github.com/MINT-SJTU/CTR",
+  "publication_base_commit": "365b737ce0b0e4763ecc7d277fa19a8517fc1e21",
+  "prepared_date": "2026-10-28",
+  "license": "MIT",
+  "status": "candidate; private geometry dependency unresolved"
+}

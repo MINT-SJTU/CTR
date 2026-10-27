@@ -1,0 +1,37 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "real-robot-data-retime"
+version = "0.1.0"
+description = "Counterfactual retiming for sequential dual-arm real-robot datasets"
+readme = "README.md"
+license = {file = "LICENSE"}
+requires-python = ">=3.11"
+dependencies = [
+  "datasets>=3.0",
+  "numpy>=1.26",
+  "opencv-python-headless>=4.8",
+  "pyarrow>=15",
+]
+
+[project.optional-dependencies]
+test = ["pytest>=8"]
+interaction = ["scipy>=1.11", "matplotlib>=3.8", "scikit-image>=0.24"]
+collision = ["pin==2.7.0", "numpy>=1.26,<2"]
+segmentation = ["torch==2.8.0", "torchvision==0.23.0", "transformers==5.16.1", "accelerate>=1.0", "einops>=0.8", "cotracker @ git+https://github.com/facebookresearch/co-tracker.git@82e02e8029753ad4ef13cf06be7f4fc5facdda4d"]
+
+[project.scripts]
+real-robot-trim = "real_robot_data_retime.trim:main"
+real-robot-retime = "real_robot_data_retime.dataset:main"
+real-robot-retime-validate = "real_robot_data_retime.validate:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.setuptools.package-data]
+"real_robot_data_retime" = ["preview/*.html"]
