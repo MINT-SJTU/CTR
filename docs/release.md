@@ -51,3 +51,18 @@ Final source-environment regression with the merged package and verified PiperX
 assets: **374 passed, 2 skipped**. Only the real-video scene fixture and generated
 drawer-dataset fixture were unavailable. No new GPU video processing or complete
 dataset export was run as part of packaging.
+
+
+## Raw-episode verification update (2026-11-02)
+
+The original packaging checks above describe the 2026-10-28 snapshot. The later
+four-task raw-episode check runs on lab machine b, using one pinned episode per
+task and the published package as its base. It adds the portable raw runner and
+reuses the complete water implementation from source commit
+`6733992ec0eda1cc67d385f553501626bb248dd6`.
+
+See [raw-episode processing](raw-episode-processing.md) for commands and
+[the four-task verification record](raw-verification.md) for actual inputs,
+outputs and the limits of acceptance. Detailed logs, failed attempts, segmentation
+caches, source videos and generated outputs remain outside Git. This processing
+does not launch policy training, evaluation or robot motion.

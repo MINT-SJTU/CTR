@@ -69,12 +69,13 @@ def test_point_tracking_failure_keeps_complete_measurements_for_retry(
         lambda *a, **k: dict(passed=True, arms=[dict(passed=True), dict(passed=True)]),
     )
 
-    def interrupted(*args):
+    def interrupted(*args, device):
+        assert device == "cpu"
         raise RuntimeError("point tracking interrupted")
 
     monkeypatch.setattr(points, "track_points", interrupted)
     with pytest.raises(RuntimeError, match="point tracking interrupted"):
-        pipeline.run(tmp_path / "input.mp4", tmp_path, "drawer")
+        pipeline.run(tmp_path / "input.mp4", tmp_path, "drawer", point_tracker_device="cpu")
     manifest = json.loads((tmp_path / "measurements.json").read_text())
     assert manifest["producer"] == "original-automatic-producer"
     with np.load(tmp_path / "tracks.npz") as saved:

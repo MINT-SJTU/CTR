@@ -114,9 +114,10 @@ def plan_visual(
             )
         else:
             interior = discover_drawer_interior(frames[a])
-        # The open drawer's source dwell becomes a held right pose. The actual
-        # moving parts before and after this dwell are retained at source speed.
-        sources[1] = np.r_[np.arange(a + 1), np.arange(b, n)]
+        # Openness does not establish that the arm stayed motionless. Keep
+        # every native pose when no joint-qualified compaction is available;
+        # smoothing must never interpolate across an unverified source gap.
+        sources[1] = (np.arange(n) if joints is None else np.r_[np.arange(a + 1), np.arange(b, n)])
         outside = []
         for t in range(event["release_frame"] + 1, n):
             mask = robots[t, 0]

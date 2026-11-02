@@ -1,74 +1,267 @@
-"""Water tray CTR clocks and supervision policy. No calibration or joint projection."""
+"""Water timing from frozen commands; one scheduler for manual and uniform samples."""
+
+from dataclasses import asdict, dataclass
+import math
+
 import numpy as np
 from scipy.ndimage import median_filter
 
-ORDERS=('parallel','left_first','right_first')
-def runs(mask):return np.flatnonzero(np.diff(np.r_[False,mask,False].astype(int))).reshape(-1,2)
-def phase_candidates(action,state,fps=30):
- action=np.asarray(action);state=np.asarray(state);n=len(action);assert action.shape==state.shape==(n,14)
- result=[]
- for side,k in enumerate([6,13]):
-  opened=median_filter(action[:,k],size=3)>20
-  seq=[(int(a),int(b)) for a,b in runs(opened) if b-a>=6]
-  if len(seq)!=3:raise ValueError(f'Expected three opening cycles (bottle, tray approach, tray release); side {side}: {seq}')
-  first,second,third=seq
-  if not first[1]<second[0]<second[1]<third[0]<third[1]<n-5:raise ValueError('Invalid water event order')
-  result.append(dict(open_runs=seq,pickup_command_close=first[1],bottle_open_command=second[0],tray_close_command=second[1],tray_release_open=third[0],empty_reclose=third[1]))
- start=min(x['tray_close_command'] for x in result)-6
- end=max(x['empty_reclose'] for x in result)+3
- if not 10<start<end<n-10:raise ValueError('Insufficient independent motion around synchronized carry')
- for side in range(2):
-  v=state[:10,side*7:side*7+6]
-  if np.ptp(v,axis=0).max()>0.5:raise ValueError('Initial state is already moving; cannot use it as an artificial onset hold')
- return dict(shared_start=start,shared_end=end,sides=result,method='gripper-cycle candidates; requires image confirmation of contact, settled tray and both arms disengaged',image_verified=False)
+from ..retime import (
+    ArmSegment,
+    EpisodeSegments,
+    boolean_ranges,
+    build_uniform_schedule_plan,
+)
+from ..trim import analyze_episode
 
-def smooth_clock(start,stop,ramp=8):
- d=stop-start
- if d<1:raise ValueError('Empty moving phase')
- r=min(ramp,d);rise=(np.arange(r)+0.5)/r
- steps=np.r_[rise,np.ones(d-r),rise[::-1]]
- clock=start+np.r_[0,np.cumsum(steps)];clock[-1]=stop
- assert np.all(np.diff(clock)>=0) and np.max(np.diff(clock))<=1+1e-8
- return clock
+ARMS = ("left", "right")
 
-def block(clock,order,phase):
- if order not in ORDERS:raise ValueError(order)
- length=len(clock);delays=[0,0]
- if order!='parallel':delays[1 if order=='left_first' else 0]=length-1
- N=length+max(delays);clocks=np.stack([clock[np.clip(np.arange(N)-d,0,length-1)] for d in delays],axis=1)
- idle=np.zeros((N,2),bool);required=np.zeros((N,2),bool)
- for side,d in enumerate(delays):
-  idle[:,side]=np.arange(N)<d
-  if phase=='pickup':required[:,side]=np.arange(N)>=d+length
- # Both sides of the first advancing sample remain supervised. Never hide onset.
- advancing=np.zeros_like(idle);advancing[1:]|=np.diff(clocks,axis=0)>1e-9;advancing[:-1]|=np.diff(clocks,axis=0)>1e-9
- idle&=~advancing
- return clocks,idle,required
 
-def make_schedule(n,shared_start,shared_end,start_order,return_order,fps=30,terminal_seconds=1.5):
- S,E=shared_start,shared_end
- if not 1<S<E<n-2:raise ValueError('Invalid synchronized range')
- pre,pi,pw=block(smooth_clock(0,S-1),start_order,'pickup')
- mid=smooth_clock(S-1,E+1);middle=np.stack([mid,mid],axis=1)
- post,ri,rw=block(smooth_clock(E+1,n-1),return_order,'return')
- clocks=np.concatenate([pre,middle[1:],post[1:]])
- idle=np.concatenate([pi,np.zeros((len(mid)-1,2),bool),ri[1:]])
- waits=np.concatenate([pw,np.zeros((len(mid)-1,2),bool),rw[1:]])
- stage=np.r_[np.zeros(len(pre),int),np.ones(len(mid)-1,int),np.full(len(post)-1,2,int)]
- original_length=len(clocks);tail=max(0,int(np.ceil(terminal_seconds*fps))-1)
- clocks=np.vstack([clocks,np.tile([n-1,n-1],(tail,1))]);idle=np.vstack([idle,np.zeros((tail,2),bool)]);waits=np.vstack([waits,np.zeros((tail,2),bool)]);stage=np.r_[stage,np.full(tail,3)]
- synthetic=np.arange(len(clocks))>=original_length
- active=(~idle).astype('float32');shared=((clocks>=S)&(clocks<=E)).any(axis=1)
- validate_schedule(clocks,active,shared,waits,synthetic,n,S,E)
- return dict(clocks=clocks,active=active,required_wait=waits,shared=shared,stage=stage,synthetic=synthetic)
+@dataclass(frozen=True)
+class Timing:
+    first_arm: str
+    delay_ratio: float
 
-def validate_schedule(clocks,active,shared,waits,synthetic,n,S,E):
- if not np.isfinite(clocks).all() or (np.diff(clocks,axis=0)<-1e-8).any():raise ValueError('Invalid source clocks')
- if clocks.min()<0 or clocks.max()>n-1 or np.max(np.diff(clocks,axis=0))>1+1e-8:raise ValueError('Source frames skipped or out of bounds')
- if not np.array_equal(clocks[shared,0],clocks[shared,1]):raise ValueError('Shared tray clocks diverge')
- if not np.all(active[shared]==1) or not np.all(active[waits]==1):raise ValueError('Required coordination masked')
- moving=np.zeros_like(active,dtype=bool);moving[1:]|=np.diff(clocks,axis=0)>1e-9;moving[:-1]|=np.diff(clocks,axis=0)>1e-9
- if not np.all(active[moving]==1):raise ValueError('Motion onset incorrectly masked')
- completed=clocks==n-1
- if not np.all(active[completed]==1) or not np.all(active[synthetic]==1):raise ValueError('Task completion must remain supervised')
- if not np.all(clocks[-1]==n-1):raise ValueError('Incomplete return')
+    def __post_init__(self):
+        if self.first_arm not in ARMS or not 0 <= self.delay_ratio <= 1:
+            raise ValueError(
+                "first_arm must be left/right and delay_ratio must be in [0, 1]"
+            )
+
+
+def detect_phases(action, state, fps=30, *, motion_threshold=3.0):
+    """Inclusive event frames; aperture >20 mm starts an opening command.
+
+    Motion thresholds are degrees/s and mm/s, as in trim.analyze_episode.
+    Durations come from frozen actions, never a dataset average.
+    """
+    action, state = np.asarray(action), np.asarray(state)
+    if action.ndim != 2 or action.shape[1] != 14 or state.shape != action.shape:
+        raise ValueError("action and state must both have shape (N, 14)")
+    if not np.isfinite(action).all() or not np.isfinite(state).all():
+        raise ValueError("nonfinite action/state")
+    n = len(action)
+    trim = analyze_episode(
+        action, fps, motion_threshold, motion_threshold, tail_seconds=0
+    )
+    cycles = []
+    for column in (6, 13):
+        opened = median_filter(action[:, column], size=3) > 20
+        events = [
+            (r.start, r.end)
+            for r in boolean_ranges(opened)
+            if r.length >= max(2, math.ceil(0.2 * fps))
+        ]
+        if len(events) < 3:
+            raise ValueError("missing bottle/tray gripper opening cycles")
+        cycles.append(events)
+    # A paired opening can be a regrasp before carrying the tray. Select the
+    # release following the longest continuous bilateral closed interval;
+    # brief regrips and later empty-gripper cycles must not cut the carry.
+    paired = [
+        (left, right, max(cycles[0][li - 1][1], cycles[1][ri - 1][1]))
+        for li, left in enumerate(cycles[0][2:], 2)
+        for ri, right in enumerate(cycles[1][2:], 2)
+        if abs(left[0] - right[0]) <= math.ceil(2 * fps / 3)
+    ]
+    if not paired:
+        raise ValueError("no paired tray release")
+    release = max(
+        paired, key=lambda pair: min(pair[0][0], pair[1][0]) - pair[2]
+    )[:2]
+    ends = [c[1][0] + math.ceil(0.6 * fps) for c in cycles]
+    shared_start = max(ends)
+    shared_end = max(x[0] for x in release) + math.ceil(0.2 * fps)
+    starts = [trim[arm]["head_frames"] for arm in ARMS]
+    returns = [n - trim[arm]["tail_frames"] - 1 for arm in ARMS]
+    if not all(
+        0 <= starts[i] < ends[i] <= shared_start < shared_end < returns[i] < n
+        for i in range(2)
+    ):
+        raise ValueError("invalid independent or synchronized phase boundaries")
+    bottles = [
+        dict(
+            object_id=i,
+            robot_id=ARMS[i],
+            approach_start=c[0][0],
+            pickup_frame=c[0][1],
+            grasp_frame=c[0][1],
+            release_frame=c[1][0],
+            retract_end=ends[i],
+        )
+        for i, c in enumerate(cycles)
+    ]
+    return dict(
+        source_frames=n,
+        fps=fps,
+        shared_start=shared_start,
+        shared_end=shared_end,
+        prepare_start=starts,
+        prepare_end=ends,
+        return_end=returns,
+        head_removed=min(starts),
+        arm_head_removed=starts,
+        cycles=cycles,
+        tray_release_frames=[x[0] for x in release],
+        bottle_events=bottles,
+        duration_source="frozen_action_sequence",
+        motion_threshold=motion_threshold,
+        image_verified=False,
+        boundary_policy="bottle opening +0.6s; later paired tray opening +0.2s",
+    )
+
+
+def phase_durations(phase, name):
+    start = phase["prepare_start"] if name == "prepare" else [phase["shared_end"]] * 2
+    end = phase["prepare_end"] if name == "prepare" else phase["return_end"]
+    durations = np.asarray(end, dtype=int) - start
+    if np.any(durations <= 0):
+        raise ValueError("independent phases must have positive duration")
+    return durations
+
+
+def uniform_timing(phase, grid_index, grid_size):
+    """Inclusive endpoints: left serial -> right serial, in signed frame time."""
+    left, right = map(int, phase_durations(phase, "prepare"))
+    segments = EpisodeSegments(0, ArmSegment(0, left), ArmSegment(0, right), 0, 0, 0, 0)
+    plan = build_uniform_schedule_plan(segments, grid_index, grid_size)
+    delta = plan.right_start_frame - plan.left_start_frame
+    first = 0 if delta >= 0 else 1
+    timing = Timing(ARMS[first], abs(delta) / (left, right)[first])
+    return timing, dict(
+        grid_index=grid_index,
+        grid_size=grid_size,
+        requested_offset_frames=left - grid_index * (left + right) / grid_size,
+        signed_offset_frames=delta,
+        endpoint_offsets_frames=[left, -right],
+        quantization="nearest frame; at most half a frame",
+    )
+
+
+def independent_block(starts, ends, timing):
+    """Clock samples include both endpoints; duration is samples minus one."""
+    starts, ends = np.asarray(starts, dtype=int), np.asarray(ends, dtype=int)
+    durations = ends - starts
+    if np.any(durations <= 0):
+        raise ValueError("empty independent motion")
+    first = ARMS.index(timing.first_arm)
+    delays = np.zeros(2, dtype=int)
+    delays[1 - first] = math.floor(timing.delay_ratio * int(durations[first]) + 0.5)
+    timeline = np.arange(int(np.max(delays + durations)) + 1)
+    clocks = starts + np.clip(timeline[:, None] - delays, 0, durations)
+    idle = timeline[:, None] < delays
+    # The last hold sample borders an advancing command and remains supervised.
+    advancing = np.zeros_like(idle)
+    advancing[1:] |= np.diff(clocks, axis=0) > 0
+    advancing[:-1] |= np.diff(clocks, axis=0) > 0
+    idle &= ~advancing
+    required = timeline[:, None] > delays + durations
+    receipt = dict(
+        **asdict(timing),
+        duration_frames=durations.tolist(),
+        onset_frames=delays.tolist(),
+        finish_frames=(delays + durations).tolist(),
+        signed_offset_frames=int(delays[1] - delays[0]),
+        duration_source="frozen_action_sequence",
+    )
+    return clocks, idle, required, receipt
+
+
+def join_to_source(starts, stop):
+    """Supervised continuation after both arms finish, to a common source frame."""
+    starts = np.asarray(starts, dtype=int)
+    steps = np.arange(int(stop - starts.min()) + 1)[:, None]
+    return np.minimum(starts + steps, stop)
+
+
+def make_schedule(phase, timing, *, terminal_seconds=1.5):
+    """Reuse one arm and p in both phases, including unequal arm durations."""
+    n, fps = phase["source_frames"], phase["fps"]
+    if not np.isfinite(terminal_seconds) or terminal_seconds < 0:
+        raise ValueError("terminal_seconds must be finite and nonnegative")
+    S, E = phase["shared_start"], phase["shared_end"]
+    pre, pi, pw, pt = independent_block(
+        phase["prepare_start"], phase["prepare_end"], timing
+    )
+    bridge = join_to_source(phase["prepare_end"], S)[1:]
+    pre = np.vstack([pre, bridge])
+    pi = np.vstack([pi, np.zeros_like(bridge, dtype=bool)])
+    pw = np.vstack([pw, np.ones_like(bridge, dtype=bool)])
+    middle = np.repeat(np.arange(S + 1, E + 1)[:, None], 2, axis=1)
+    post, ri, rw, rt = independent_block([E, E], phase["return_end"], timing)
+    rest = join_to_source(phase["return_end"], n - 1)[1:]
+    post = np.vstack([post[1:], rest])
+    ri = np.vstack([ri[1:], np.zeros_like(rest, dtype=bool)])
+    rw = np.vstack([rw[1:], np.ones_like(rest, dtype=bool)])
+    tail = max(0, math.ceil(terminal_seconds * fps) - 1)
+    terminal = np.full((tail, 2), n - 1, dtype=int)
+    clocks = np.vstack([pre, middle, post, terminal])
+    idle = np.vstack(
+        [pi, np.zeros_like(middle, dtype=bool), ri, np.zeros_like(terminal, dtype=bool)]
+    )
+    waits = np.vstack(
+        [pw, np.zeros_like(middle, dtype=bool), rw, np.zeros_like(terminal, dtype=bool)]
+    )
+    stage = np.repeat([0, 1, 2, 3], [len(pre), len(middle), len(post), tail])
+    # The coordinated interval begins once both clocks reach S, not when one
+    # arm has already reached its endpoint while the other is still finishing.
+    shared = (clocks[:, 0] == clocks[:, 1]) & (clocks[:, 0] >= S) & (clocks[:, 0] <= E)
+    result = dict(
+        clocks=clocks,
+        active=(~idle).astype(np.float32),
+        required_wait=waits,
+        shared=shared,
+        stage=stage,
+        synthetic=stage == 3,
+        timing=dict(**asdict(timing), prepare=pt, return_timing=rt),
+    )
+    validate_schedule(result, phase)
+    return result
+
+
+def validate_schedule(schedule, phase):
+    clocks, active = schedule["clocks"], schedule["active"]
+    n = phase["source_frames"]
+    if clocks.ndim != 2 or clocks.shape[1] != 2 or active.shape != clocks.shape:
+        raise ValueError("invalid clock/mask shape")
+    delta = np.diff(clocks, axis=0)
+    if (
+        not np.isfinite(clocks).all()
+        or clocks.min() < 0
+        or clocks.max() >= n
+        or np.any(delta < 0)
+        or np.any(delta > 1)
+    ):
+        raise ValueError("source frames skipped or out of bounds")
+    if not np.isin(active, [0, 1]).all():
+        raise ValueError("active mask must be binary")
+    if np.count_nonzero((active == 0).any(axis=0)) > 1:
+        raise ValueError("an episode may mask only one delayed arm")
+    S, E = phase["shared_start"], phase["shared_end"]
+    shared = schedule["shared"]
+    expected_shared = (
+        (clocks[:, 0] == clocks[:, 1]) & (clocks[:, 0] >= S) & (clocks[:, 0] <= E)
+    )
+    interior = ((clocks > S) & (clocks < E)).any(axis=1)
+    middle = np.repeat(np.arange(S + 1, E + 1)[:, None], 2, axis=1)
+    if (
+        not np.array_equal(shared, expected_shared)
+        or not np.array_equal(clocks[interior, 0], clocks[interior, 1])
+        or not np.array_equal(clocks[schedule["stage"] == 1], middle)
+    ):
+        raise ValueError("shared tray clocks diverge or omit synchronized frames")
+    moving = np.zeros_like(active, dtype=bool)
+    moving[1:] |= delta > 0
+    moving[:-1] |= delta > 0
+    if not np.all(active[moving] == 1):
+        raise ValueError("motion onset incorrectly masked")
+    if not np.all(active[shared] == 1) or not np.all(
+        active[schedule["required_wait"]] == 1
+    ):
+        raise ValueError("required coordination masked")
+    if (
+        not np.all(active[clocks == n - 1] == 1)
+        or not np.all(active[schedule["synthetic"]] == 1)
+        or not np.all(clocks[-1] == n - 1)
+    ):
+        raise ValueError("task completion must remain supervised")

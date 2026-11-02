@@ -70,6 +70,12 @@ robo-visualize-piperx-web --dataset-path /path/to/lerobot-dataset
 
 See [asset setup, public sources and viewer environments](docs/robot-assets.md).
 
+## Process one raw episode end to end
+
+The [raw-episode runner](docs/raw-episode-processing.md) handles drawer, letters,
+workpiece and water, with separate CPU preparation and GPU rendering stages.
+The [water entry](docs/water-retiming.md) exposes its task-specific phase semantics.
+
 ## Process a dataset
 
 Start with [dataset processing and validation](docs/datasets.md), including the

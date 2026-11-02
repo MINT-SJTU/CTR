@@ -29,6 +29,12 @@ python main.py --input /path/to/input.mp4 --task drawer \
 `--analysis-only` 只分析；`batch.py --input-dir ... --output-dir ...` 批处理。
 视频路径检查的是投影轮廓，不能替代基于关节和网格的三维检查。
 
+## 单条 raw 数据的完整处理
+
+抽屉、字母、工件和送水均可通过[单条 raw 处理入口](docs/raw-episode-processing.md)执行：
+CPU 阶段裁剪并记录来源，渲染阶段识别交互、分割、重排并拼接主视角，
+同时对齐双腕视频与 action/state。送水另见[阶段与时序说明](docs/water-retiming.md)。
+
 ## 数据集处理
 
 自动导出入口针对 PiperX、LeRobot v3 和抽屉任务。左右臂分别采用六个角度值

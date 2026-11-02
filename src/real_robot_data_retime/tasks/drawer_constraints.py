@@ -149,7 +149,7 @@ def precedence_gate(
     )
 
 
-def discover_drawer_interior(open_frame_image):
+def discover_drawer_interior(open_frame_image, *, sam=None):
     """Segment the open drawer from cabinet-relative image prompts.
 
     A pale tabletop may be larger than the actual interior. Do not select the
@@ -185,7 +185,7 @@ def discover_drawer_interior(open_frame_image):
     region[y0:y1, x0:x1] = True
     proposal = dict(bbox=[x0, y0, x1-x0, y1-y0], mask=region,
                     positive_points=bounded(positive), negative_points=bounded(negative))
-    sam = SamVideo("facebook/sam2.1-hiera-large")
+    sam = sam or SamVideo("facebook/sam2.1-hiera-large")
     _, masks = next(sam.propagate(np.asarray([image]), [proposal]))
     pale = (hsv[:, :, 1] < 100) & (hsv[:, :, 2] > 100)
     candidates = components(masks[0] & pale & region, int(h*w*.005))

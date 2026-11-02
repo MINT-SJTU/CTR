@@ -63,10 +63,12 @@ def run(
     config=InteractionConfig(),
     backend="sam2",
     analysis_width=640,
+    point_tracker_device="cuda",
     reuse_measurements=None,
     retry_objects=False,
     retry_grippers=False,
 ):
+    source_config = config
     if retry_grippers and backend != "sam2":
         raise ValueError("contact gripper recovery requires SAM measurements")
     output_dir = Path(output_dir)
@@ -264,9 +266,9 @@ def run(
                 )
                 retries.extend(terminal_retries)
         if retry_grippers:
-            if task != "workpiece" or reuse_measurements is None:
+            if task not in {"workpiece", "drawer"} or reuse_measurements is None:
                 raise ValueError(
-                    "contact gripper recovery requires workpiece measurements"
+                    "contact gripper recovery requires cached drawer/workpiece measurements"
                 )
             from .contact_grippers import recover_contact_grippers
 
@@ -274,12 +276,21 @@ def run(
                 (Path(reuse_measurements) / "interaction_timeline.json").read_text()
             )
             accepted_ids = {e["object_id"] for e in previous["episodes"]}
-            missing_ids = sorted(set(range(len(proposals))) - accepted_ids)
+            missing_ids = (
+                sorted(accepted_ids) if task == "drawer"
+                else sorted(set(range(len(proposals))) - accepted_ids)
+            )
             if sam is None:
                 sam = SamVideo("facebook/sam2.1-hiera-large")
             grippers, contact_audit = recover_contact_grippers(
                 frames, proposals, grippers, missing_ids, sam, fps
             )
+            if task == "drawer":
+                from .drawer_recovery import recover_deposited_cube
+                recovered = []
+                for event in previous["episodes"]:
+                    recovered.append(recover_deposited_cube(frames, proposals, tracks, grippers, event, previous["drawer_motion"], sam, fps))
+                retries.append(dict(kind="drawer_deposition_identity_recovery", evidence=recovered))
             evidence["centers"] = grippers["centers"]
             evidence["apertures"] = grippers["apertures"]
             retries.append(
@@ -413,7 +424,7 @@ def run(
                 cached_points[k] for k in ["xy", "visible", "source_indices"]
             )
         else:
-            xy, visible, sampled_indices = track_points(frames, handle_proposals)
+            xy, visible, sampled_indices = track_points(frames, handle_proposals, device=point_tracker_device)
         temporary_points = output_dir / "drawer_point_tracks.tmp.npz"
         np.savez_compressed(
             temporary_points, xy=xy, visible=visible, source_indices=sampled_indices
@@ -752,6 +763,16 @@ def run(
     from ..timeline.episode import assign_boundaries
 
     selected = assign_boundaries(selected, evidence["centers"], fps, frames.shape[2])
+    if task == "drawer" and backend == "sam2":
+        from .origin_events import origin_departure_interval
+        observed_robot_union = origin_robots.any(axis=1)
+        for event in selected:
+            contact, _ = origin_departure_interval(frames, proposals[event["object_id"]], observed_robot_union, fps)
+            if contact is not None:
+                context_start = max(0, contact["last_observed_at_origin"] - round(fps * 0.5))
+                event["approach_start"] = min(event["approach_start"], context_start)
+                event["grasp_start"] = min(event["grasp_start"], contact["last_observed_at_origin"])
+                event["approach_evidence"] = dict(origin_last_seen=contact["last_observed_at_origin"], retained_contact_context_start=context_start)
     if task == "drawer" and selected and backend == "sam2":
         release = max(c["release_frame"] for c in selected)
 
@@ -788,6 +809,12 @@ def run(
             retries.append(
                 dict(kind="drawer_event_chronology", accepted=consistent(drawer_motion))
             )
+            if not consistent(drawer_motion) and not retry_grippers:
+                preliminary = dict(task=task, fps=fps, source_frames=len(frames), episodes=selected, drawer_motion=drawer_motion)
+                (output_dir / "interaction_timeline.json").write_text(json.dumps(preliminary, indent=2, allow_nan=False))
+                (output_dir / "drawer_recovery_trigger.json").write_text(json.dumps(dict(reason="release chronology conflicts with observed drawer motion", release=release, drawer_motion=drawer_motion),indent=2))
+                progress("recover_drawer_contact_and_deposition")
+                return run(input_path, output_dir, task, source_config, backend=backend, analysis_width=analysis_width, point_tracker_device=point_tracker_device, reuse_measurements=output_dir, retry_grippers=True)
     timeline = {
         "task": task,
         "fps": fps,

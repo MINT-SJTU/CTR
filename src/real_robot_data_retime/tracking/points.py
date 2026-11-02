@@ -2,7 +2,7 @@ import numpy as np
 from functools import partial
 
 
-def _track_points(frames, proposals, stride=3):
+def _track_points(frames, proposals, stride=3, *, device="cuda"):
     """CoTracker's visibility distinguishes observation from occlusion prediction."""
     import torch
     from huggingface_hub import hf_hub_download
@@ -16,17 +16,17 @@ def _track_points(frames, proposals, stride=3):
         revision=MODEL_REVISIONS["facebook/cotracker3"],
     )
     model = (
-        CoTrackerPredictor(checkpoint=checkpoint, window_len=60, v2=False).cuda().eval()
+        CoTrackerPredictor(checkpoint=checkpoint, window_len=60, v2=False).to(device).eval()
     )
     # Keep CoTracker's full temporal window and predictor coordinate handling;
     # only bound its supported, frame-independent convolution feature batches.
-    model.model.forward = partial(model.model.forward, fmaps_chunk_size=32)
+    model.model.forward = partial(model.model.forward, fmaps_chunk_size=8)
     sampled = frames[::stride]
     points = torch.tensor([[0, *p["origin"]] for p in proposals], dtype=torch.float32)[
         None
-    ].cuda()
+    ].to(device)
     rgb = sampled[:, :, :, ::-1].copy()
-    video = torch.from_numpy(rgb).permute(0, 3, 1, 2)[None].float().cuda()
+    video = torch.from_numpy(rgb).permute(0, 3, 1, 2)[None].float().to(device)
     with torch.inference_mode():
         xy, visible = model(video, queries=points)
     xy = xy[0].cpu().numpy()
@@ -36,11 +36,12 @@ def _track_points(frames, proposals, stride=3):
     import gc
 
     gc.collect()
-    torch.cuda.empty_cache()
+    if str(device).startswith("cuda"):
+        torch.cuda.empty_cache()
     return xy, visible, np.arange(0, len(frames), stride)
 
 
-def track_points(frames, proposals, stride=3):
+def track_points(frames, proposals, stride=3, *, device="cuda"):
     """Serialize the high-memory stage across local batch workers."""
     import fcntl
     from pathlib import Path
@@ -49,4 +50,4 @@ def track_points(frames, proposals, stride=3):
     lock_path.parent.mkdir(parents=True, exist_ok=True)
     with lock_path.open("a") as lock:
         fcntl.flock(lock, fcntl.LOCK_EX)
-        return _track_points(frames, proposals, stride)
+        return _track_points(frames, proposals, stride, device=device)

@@ -32,6 +32,7 @@ def edit_video(
     *,
     backend="sam2",
     analysis_width=640,
+    point_tracker_device="cuda",
     joint_data=None,
     urdf=None,
     mesh_root=None,
@@ -40,7 +41,8 @@ def edit_video(
 ):
     debug = Path(debug_dir)
     report = run(
-        input_path, debug, task, backend=backend, analysis_width=analysis_width
+        input_path, debug, task, backend=backend, analysis_width=analysis_width,
+        point_tracker_device=point_tracker_device
     )
     if not report["success"]:
         return report

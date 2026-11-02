@@ -13,6 +13,7 @@ def main():
     p.add_argument("--task", choices=["drawer", "letters", "workpiece"])
     p.add_argument("--backend", choices=["sam2", "geometry"], default="sam2")
     p.add_argument("--analysis-width", type=int, default=640)
+    p.add_argument("--point-tracker-device", choices=["cuda", "cpu"], default="cuda")
     p.add_argument("--analysis-only", action="store_true")
     p.add_argument("--joint-data", type=Path)
     p.add_argument("--urdf", type=Path)
@@ -24,7 +25,7 @@ def main():
         p.error("provide exactly one input video")
     source = a.video or a.input
     debug = a.debug_dir or source.parent / (source.stem + "_debug")
-    options = dict(backend=a.backend, analysis_width=a.analysis_width)
+    options = dict(backend=a.backend, analysis_width=a.analysis_width, point_tracker_device=a.point_tracker_device)
     if a.analysis_only:
         result = run(source, debug, a.task, **options)
     else:
