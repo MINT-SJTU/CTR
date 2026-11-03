@@ -12,9 +12,7 @@ Convert sequential dual-arm demonstrations into temporally overlapping demonstra
 CTR discovers interactions, schedules per-arm source clocks, composites the main
 camera, and remaps each arm's recorded telemetry and wrist video to its own clock.
 
-This first code release covers real-robot data processing. It does not include
-policy training or RoboTwin evaluation. The Python package retains its name
-`real_robot_data_retime` so the original processing modules remain directly usable.
+This first code release covers real-robot data processing. 
 
 ## What is supported
 
