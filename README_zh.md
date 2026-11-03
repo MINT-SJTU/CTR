@@ -1,4 +1,10 @@
-# CTR：真机视频与数据集重定时
+<h1 align="center">CTR：真机视频与数据集重定时</h1>
+
+<p align="center">
+  <a href="https://huggingface.co/docs/lerobot/lerobot-dataset-v3"><img alt="LeRobot dataset format v3.0" src="https://img.shields.io/badge/LeRobot%20Data-v3.0-f59e0b"/></a>
+  <a href="./LICENSE"><img alt="MIT license" src="https://img.shields.io/badge/License-MIT-ef4444"/></a>
+  <a href="./docs/raw-verification.md#frozen-raw-inputs"><img alt="Four verified raw task datasets" src="https://img.shields.io/badge/%F0%9F%A4%97%20Dataset-4%20raw%20tasks-ffcc4d"/></a>
+</p>
 
 [English](README.md)
 
@@ -61,3 +67,10 @@ python -m pytest -q -rs
 CPU 测试不能代替真实视频、数据集和机器人几何验证。
 [发布记录](docs/release.md)列出来源、验证结果和限制。
 自有代码采用 [MIT](LICENSE)，外部模型、依赖和机器人资产保留各自许可。
+
+## 🏫 Affiliations
+
+<p align="center">
+  <img alt="SJTU community visual" src="./docs/assets/affiliations/sjtu.png" height="68"/>
+  <img alt="EvoMind" src="./docs/assets/affiliations/evomind1.png" height="60"/>
+</p>

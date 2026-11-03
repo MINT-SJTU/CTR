@@ -1,4 +1,10 @@
-# CTR: real-robot video and dataset retiming
+<h1 align="center">CTR: real-robot video and dataset retiming</h1>
+
+<p align="center">
+  <a href="https://huggingface.co/docs/lerobot/lerobot-dataset-v3"><img alt="LeRobot dataset format v3.0" src="https://img.shields.io/badge/LeRobot%20Data-v3.0-f59e0b"/></a>
+  <a href="./LICENSE"><img alt="MIT license" src="https://img.shields.io/badge/License-MIT-ef4444"/></a>
+  <a href="./docs/raw-verification.md#frozen-raw-inputs"><img alt="Four verified raw task datasets" src="https://img.shields.io/badge/%F0%9F%A4%97%20Dataset-4%20raw%20tasks-ffcc4d"/></a>
+</p>
 
 [中文说明](README_zh.md)
 
@@ -100,3 +106,10 @@ source snapshot, packaging scope and verification limitations.
 
 CTR-owned code is released under [MIT](LICENSE). External libraries, models and
 robot geometry retain their own terms; see [third-party dependencies](THIRD_PARTY.md).
+
+## 🏫 Affiliations
+
+<p align="center">
+  <img alt="SJTU community visual" src="./docs/assets/affiliations/sjtu.png" height="68"/>
+  <img alt="EvoMind" src="./docs/assets/affiliations/evomind1.png" height="60"/>
+</p>
