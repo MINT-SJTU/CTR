@@ -1,6 +1,7 @@
 <h1 align="center">CTR：真机视频与数据集重定时</h1>
 
 <p align="center">
+  <a href="https://arxiv.org/abs/2610.26507"><img alt="arXiv paper 2610.26507" src="https://img.shields.io/badge/arXiv-2610.26507-b31b1b.svg"/></a>
   <a href="https://huggingface.co/docs/lerobot/lerobot-dataset-v3"><img alt="LeRobot dataset format v3.0" src="https://img.shields.io/badge/LeRobot%20Data-v3.0-f59e0b"/></a>
   <a href="./LICENSE"><img alt="MIT license" src="https://img.shields.io/badge/License-MIT-ef4444"/></a>
   <a href="./docs/raw-verification.md#frozen-raw-inputs"><img alt="Four verified raw task datasets" src="https://img.shields.io/badge/%F0%9F%A4%97%20Dataset-4%20raw%20tasks-ffcc4d"/></a>
